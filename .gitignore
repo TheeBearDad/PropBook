@@ -1,0 +1,10 @@
+dist/
+*.old
+*.new
+*.zip
+release-key*
+*.key
+.propbook-keys/
+journal-data.json
+extension-key.txt
+.DS_Store

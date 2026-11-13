@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>PropBook Sync</title>
+<style>
+  :root{--bg:#0a0c0b;--panel:#111513;--line:#2f3833;--fg:#e6ebe7;--muted:#8b968f;--win:#3fcf8e;--loss:#f0605a;--warn:#d8b35b;color-scheme:dark}
+  body{margin:0;width:320px;background:var(--bg);color:var(--fg);font:13px/1.45 "Segoe UI",system-ui,sans-serif}
+  .wrap{padding:14px;display:flex;flex-direction:column;gap:12px}
+  h1{font-size:15px;margin:0;display:flex;align-items:center;gap:8px}
+  h1 img{width:20px;height:20px}
+  .status{display:flex;gap:8px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:9px 10px}
+  .dot{width:9px;height:9px;border-radius:50%;margin-top:4px;flex:none;background:var(--muted)}
+  .dot.ok{background:var(--win)}.dot.bad{background:var(--loss)}.dot.warn{background:var(--warn)}
+  .muted{color:var(--muted);font-size:12px}
+  label{font-size:12px;color:var(--muted);font-weight:600}
+  .row{display:flex;gap:6px}
+  input[type=text]{flex:1;min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:6px;color:var(--fg);padding:7px 8px;font:13px Consolas,monospace;text-transform:uppercase}
+  button{background:var(--panel);border:1px solid var(--line);color:var(--fg);border-radius:6px;padding:7px 10px;cursor:pointer;font:inherit}
+  button:hover{border-color:var(--muted)}
+  button.primary{background:var(--win);border-color:var(--win);color:#05140c;font-weight:600}
+  .check{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;color:var(--fg);font-weight:400}
+  .btns{display:flex;flex-direction:column;gap:6px}
+  #msg{min-height:1em}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1><img src="icons/32.png" alt="">PropBook Sync</h1>
+  <div class="status"><span class="dot" id="dot"></span><div><div id="st">Checking…</div><div class="muted" id="sub"></div></div></div>
+  <div>
+    <label for="key">Key from the app (Accounts screen)</label>
+    <div class="row"><input type="text" id="key" placeholder="XXXX-XXXX-XXXX-TJ" spellcheck="false" autocomplete="off"><button class="primary" id="save">Save</button></div>
+  </div>
+  <div class="status" id="stale" hidden><span class="dot warn"></span><div><div>Update waiting</div><div class="muted" id="stale-msg"></div></div></div>
+  <div class="muted" id="last"></div>
+  <div class="btns">
+    <button id="site" hidden></button>
+    <button id="scan">Sync this page now</button>
+    <button id="dump">Copy page text (for troubleshooting)</button>
+  </div>
+  <label class="check"><input type="checkbox" id="route"> Send Tradovate CSV exports to the journal (saved to a "PropBook" folder in Downloads, which the app picks up)</label>
+  <div class="muted" id="msg"></div>
+  <div class="muted" id="ver"></div>
+</div>
+<script src="popup.js"></script>
+</body>
+</html>

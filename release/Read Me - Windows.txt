@@ -1,0 +1,167 @@
+PROPBOOK - desktop app for Windows 10 / 11
+==========================================
+
+START IT
+  Double-click "PropBook.exe". It opens in its own window.
+  Close the window and the program closes too.
+
+  The first time, Windows may show "Windows protected your PC" because the
+  program isn't signed by a software publisher. Click "More info", then
+  "Run anyway". You only need to do this once.
+
+  Tip: right-click the .exe > "Send to" > "Desktop (create shortcut)",
+  or right-click > "Pin to taskbar".
+
+ACCOUNTS
+  Each prop firm account gets its own tab across the top (Lucid, Apex,
+  Tradeify, Topstep and so on). Each tab has its own balance, max loss limit,
+  profit target, calendar and stats. "All accounts" combines them and lists
+  every account's room to its loss limit.
+
+  - Add an account with the "+" tab. With the browser extension installed,
+    opening a new account's dashboard shows "New account found" at the top of
+    the journal: click Add account, link it to one you already have, or
+    Ignore. Nothing is added without your click.
+  - "Accounts" edits the selected account. Tick "Keep these limits" if you
+    don't want the extension to change its loss limit or target. Tick "Hide
+    this account" for accounts that are closed, failed or paid out; their
+    trades stay. If the same account ever shows up twice, use "Merge it into".
+  - When you log a trade, pick which account it belongs to.
+  - Loss limit type: "Trailing" moves up as the account grows (Lucid, Apex,
+    Tradeify...) and the extension keeps it current. "Static" is fixed from
+    the starting balance and never moves (Vest Markets, and any plan with a
+    fixed drawdown). Add a daily loss limit to see today's room on the meter.
+
+SETUPS
+  Pick one or more setups on every trade. Add your own with "Add setup" in the
+  trade form, or open "Edit setups" to rename or delete them, hide presets you
+  never use, and save combinations you use often (one click picks all of
+  their setups). "P&L by setup" shows each setup, or each combination.
+
+TIME IN THE TRADE
+  Enter the entry and exit times and the time in trade fills in. Add how long
+  the trade was in profit and how long it was in the red; the bar under the
+  fields shows the split. Type times as 6:30 (6 min 30 sec), 6m 30s or
+  1:05:00. Tradovate imports fill in the time in trade for you. "Time in
+  trade" under What's working shows how your hold time affects your results.
+
+UPGRADING FROM "TRADE JOURNAL"
+  PropBook used to be called Trade Journal. The first time PropBook opens, it
+  moves your Documents\Trade Journal folder to Documents\PropBook, trades,
+  notes and settings included. You can delete the old Trade Journal program.
+
+WHERE YOUR DATA LIVES
+  Documents\PropBook\
+     journal-data.json   all your trades, journal notes and account settings
+     screenshots\        chart screenshots you attach to trades
+     exports\            CSV files from the "Export CSV" button
+     TradesCSV\          drop trade CSVs here to import them automatically
+     backups\            an automatic copy each day you open the app (last 30 kept)
+
+  Nothing is sent anywhere; it all stays on your PC. To move to a new
+  computer (Windows or Mac), copy the whole "PropBook" folder into that
+  computer's Documents folder.
+
+IMPORTING TRADES (automatic)
+  Most futures prop firms (Lucid, Apex, Tradeify, Take Profit Trader,
+  My Funded Futures...) run on Tradovate:
+  1. Log in at trader.tradovate.com with that firm's credentials.
+  2. Account Reports > Performance tab > choose dates > download the CSV.
+  3. Put the CSV in that account's folder:
+        Documents\PropBook\TradesCSV\<Firm - Account name>\
+     The app makes one folder per account. A CSV dropped straight into
+     TradesCSV goes to whichever account tab you have open.
+
+  While the app is open it imports new files within a few seconds, refreshes,
+  and moves the file to TradesCSV\Imported. Files dropped in while the app is
+  closed are imported next time you open it. A CSV that isn't a trade report
+  goes to TradesCSV\Not imported, and the app tells you why.
+  Trades already in the journal are skipped, so overlapping dates are fine.
+
+  You can also use "Import trades" and choose the account there.
+
+BROWSER EXTENSION (Chrome or Brave) - syncs from your prop firm dashboards
+  PropBook Sync is a browser extension. When you open an
+  account page on your firm's dashboard, it reads the balance, max loss limit
+  / liquidation threshold, profit target, and (where the dashboard has them)
+  the P&L calendar and trade history, and sends them to the matching account
+  in the app. A new account it hasn't seen before gets its own tab.
+
+  Built-in sites: Lucid, Apex, Tradeify, Topstep, My Funded Futures,
+  Take Profit Trader, Bulenox, Earn2Trade, TradeDay, Elite Trader Funding.
+  Any other firm: open its dashboard, click the extension icon, then
+  "Read this site too".
+
+  Tradovate CSV exports you download are saved to a "PropBook" folder in
+  Downloads, and the app imports them into the account tab you have open.
+
+  Install (one time):
+  1. Open PropBook once. It puts the extension in
+        Documents\PropBook\PropBook Sync
+     (Accounts > Browser extension > "Open extension folder" shows it).
+  2. Chrome: go to  chrome://extensions   Brave: go to  brave://extensions
+  3. Turn on "Developer mode" (top right).
+  4. Click "Load unpacked" and choose that "PropBook Sync" folder.
+     Load it from there and nowhere else: that's the copy PropBook keeps
+     up to date.
+  5. Click the puzzle-piece icon in the toolbar and pin "PropBook Sync".
+  Coming from "Trade Journal Sync"? Remove that one from the extensions
+  page first, then load PropBook Sync as above.
+
+  Pair it with the app (one time):
+  1. In the app, open "Accounts". Copy the "Browser extension key".
+  2. Click the extension's icon, paste the key, click Save.
+
+  Dashboards differ from firm to firm. Lucid's layout was used to build the
+  reader; other firms are read from the labels on the page. If an account's
+  numbers don't come through: open that account's page, click the extension
+  icon, then "Copy page text (for troubleshooting)", and include it when you
+  report the problem so the reader can be adjusted for that firm.
+
+VEST MARKETS (crypto perps)
+  Vest has no API, so trades come in by CSV export:
+  1. Add the account: firm "Vest Markets" and a name with its size, such as
+     "25K 1-Step". The journal fills in a static 6% loss limit (check it
+     against your plan) and you add the profit target and daily loss limit.
+  2. In Vest, open Positions History and click Export CSV. Vest exports the
+     account selected at the top, so export each account separately.
+  3. Put the file in that account's TradesCSV folder (or use Import trades).
+  To log a perp trade by hand, pick "Other symbol" as the contract, type the
+  symbol (BTC-PERP) and the size in coins; P&L is size x price change.
+  The extension also reads balances from Vest's site when it can. If the
+  numbers or the CSV columns don't come through, use the extension's
+  "Copy page text" or send a sample export along with the problem report.
+
+LIGHT AND DARK MODE
+  The sun/moon button at the top switches between light and dark. Accounts >
+  Appearance can also set it to match your computer.
+
+UPDATES
+  PropBook checks for a new version when it opens and every few hours. When
+  one is out, a bar at the top says so: click "Update now" and PropBook
+  downloads it, checks it, and restarts on the new version. Your journal is
+  untouched. Turn on "Install updates automatically" under Accounts >
+  Updates to skip the click. Updates are signed, and PropBook refuses any
+  download whose signature or checksum doesn't match.
+  The browser extension updates with the app: PropBook refreshes the files in
+  the PropBook Sync folder and the extension reloads itself.
+
+SHARING PROPBOOK
+  The download contains no personal data. Your journal lives only in the
+  Documents/PropBook folder on your own computer. To give PropBook
+  to someone, send them the zip you downloaded (not your Documents folder):
+  they start with an empty journal, set up their own accounts, and pair the
+  extension with their own key.
+
+CHANGING THE ICON
+  Window / taskbar icon: put any square picture named  icon.png  (or
+  icon.jpg / icon.ico) in Documents\PropBook, then reopen the app.
+  Delete it to go back to the candlestick icon.
+
+  Desktop shortcut icon: right-click the shortcut > Properties > Change Icon
+  > Browse, and pick an .ico file (PropBook.ico is included here).
+
+REQUIREMENTS
+  Microsoft Edge (built into Windows 10 and 11), Google Chrome or Brave.
+  The app uses it only to draw the window; it does not open your normal
+  browser or touch your browser history.
