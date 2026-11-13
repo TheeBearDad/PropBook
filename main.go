@@ -64,6 +64,9 @@ func main() {
 	dailyBackup()
 	ensureExtension()
 	noteUpdatedFrom(os.Args[1:])
+	if os.Getenv("PROPBOOK_NO_WINDOW") == "" {
+		go refreshStartup()
+	}
 	go cleanupOld()
 	go updateLoop()
 	loadExtKey()
@@ -113,6 +116,7 @@ func main() {
 		json.NewEncoder(w).Encode(map[string]any{"key": extKey, "port": extPort, "listening": extListening,
 			"appVersion": version, "extDir": extDir, "extVersion": extBundledVersion, "extSeen": seen, "extSeenAgo": ago, "migratedFrom": migratedFrom})
 	}))
+	mux.HandleFunc("/api/startup", auth(handleStartup))
 	mux.HandleFunc("/api/update", auth(handleUpdate))
 	mux.HandleFunc("/api/update/check", auth(handleUpdate))
 	mux.HandleFunc("/api/update/install", auth(handleUpdate))
@@ -147,6 +151,7 @@ func main() {
 		fatal("Couldn't open the journal window. Install Google Chrome, Microsoft Edge or Brave, then open PropBook again.")
 	}
 	defer win.close()
+	brandWindow(win)
 	// Quit when the window closes. After an update, close this window first, then start the new
 	// version, so the new one can open the same window profile.
 	// Quit when the window process exits, or when the page says goodbye and doesn't come back.

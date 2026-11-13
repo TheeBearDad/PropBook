@@ -484,11 +484,13 @@ td.pt{color:color-mix(in srgb,var(--win) 75%,var(--muted))}td.lt{color:color-mix
       <span class="hint">To install: in Chrome or Brave open <b>chrome://extensions</b>, turn on Developer mode, choose <b>Load unpacked</b> and pick this folder. PropBook keeps the folder up to date, and the extension reloads itself when it changes.</span>
     </div>
     <div id="upd-box" hidden style="display:flex;flex-direction:column;gap:8px">
-      <div class="group-title">Updates</div>
+      <div class="group-title">Updates and startup</div>
       <div class="netline" style="flex-direction:column;align-items:stretch;gap:8px">
         <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center"><span>You have PropBook <b class="num" id="upd-cur">—</b></span><span class="note" id="upd-state"></span></div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button class="btn sm" type="button" id="upd-check">Check for updates</button><button class="btn sm primary" type="button" id="upd-now" hidden>Update now</button><button class="btn sm ghost" type="button" id="upd-dl" hidden>Download page</button></div>
         <label style="display:flex;align-items:center;gap:8px;font-size:13.5px"><input type="checkbox" id="upd-auto"> Install updates automatically when PropBook opens</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:13.5px"><input type="checkbox" id="start-login"> Open PropBook when I sign in to this computer</label>
+        <span class="note" id="start-msg" hidden></span>
         <span class="hint">Updates come from PropBook's GitHub releases. Each one is checked against PropBook's signature before it's installed, and your journal is never touched.</span>
       </div>
     </div>
@@ -1140,9 +1142,13 @@ function startUpdates(){
   $("upd-now").addEventListener("click",installNow);
   $("upd-dl").addEventListener("click",openReleases);
   $("upd-auto").addEventListener("change",e=>{settings.updates.auto=e.target.checked;persist();if(e.target.checked)updTried=false;if(updSt)showUpd(updSt)});
+  $("start-login").addEventListener("change",e=>{const on=e.target.checked;e.target.disabled=true;
+    api("/api/startup",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({enabled:on})}).then(r=>r.json()).then(k=>{showStartup(k);if(!k.error)toast(k.enabled?"PropBook will open when you sign in.":"PropBook won't open at sign-in anymore.")}).catch(()=>{e.target.disabled=false;e.target.checked=!on;toast("Couldn't change the startup setting. Restart PropBook and try again.")})});
   $("ext-open").addEventListener("click",()=>api("/api/open?dir=ext").catch(()=>{}));
   api("/api/extkey").then(r=>r.json()).then(k=>{if(k.migratedFrom)showMsg(true,"Your journal moved from “"+esc(k.migratedFrom)+"” to the PropBook folder. If you used the Trade Journal Sync extension, remove it and load PropBook Sync from Accounts → Browser extension.")}).catch(()=>{});
 }
+function showStartup(k){$("start-login").checked=!!k.enabled;$("start-login").disabled=false;$("start-msg").textContent=k.error||"";$("start-msg").hidden=!k.error}
+function loadStartup(){api("/api/startup").then(r=>r.json()).then(showStartup).catch(()=>{})}
 function agoText(s){return s<90?"just now":s<5400?Math.round(s/60)+" min ago":s<129600?Math.round(s/3600)+" h ago":Math.round(s/86400)+" days ago"}
 function loadExtInfo(){api("/api/extkey").then(r=>r.json()).then(k=>{
   $("ext-key").textContent=k.key;$("ext-dir").textContent=k.extDir||"—";
@@ -1152,7 +1158,7 @@ function loadExtInfo(){api("/api/extkey").then(r=>r.json()).then(k=>{
   else v="PropBook Sync "+k.extSeen+" is connected, but "+k.extVersion+" is in the folder. If it doesn't update by itself, remove it and load the folder below.";
   $("ext-ver").textContent=v;$("ext-state").textContent=st}).catch(()=>{})}
 function openAccounts(id){
-  if(DESK){$("ext-box").hidden=false;$("upd-box").hidden=false;$("upd-auto").checked=settings.updates.auto;showUpdBox();loadExtInfo()}
+  if(DESK){$("ext-box").hidden=false;$("upd-box").hidden=false;$("upd-auto").checked=settings.updates.auto;showUpdBox();loadExtInfo();loadStartup()}
   $("s-comm").innerHTML=Object.keys(SYM).map(k=>'<div class="field"><label for="sc-'+k+'">'+k+'</label><input class="num" type="number" step="any" id="sc-'+k+'" value="'+(settings.commission[k]??0)+'"></div>').join("");
   fillAccountForm(id||(curAcc()?activeAcc:firstAccId()));if(id==="new")$("s-firm").setAttribute("autofocus","");else $("s-firm").removeAttribute("autofocus");openOv("ov-settings");
 }

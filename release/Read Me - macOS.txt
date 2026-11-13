@@ -165,12 +165,17 @@ UPDATES
   one is out, a bar at the top says so: click "Update now" and PropBook
   downloads it, checks it, and restarts on the new version. Your journal is
   untouched. Turn on "Install updates automatically" under Accounts >
-  Updates to skip the click. Updates are signed, and PropBook refuses any
+  Updates and startup to skip the click. Updates are signed, and PropBook refuses any
   download whose signature or checksum doesn't match.
   The browser extension updates with the app: PropBook refreshes the files in
   the PropBook Sync folder and the extension reloads itself.
   Automatic updates need PropBook in your Applications folder. If it runs
   from Downloads, macOS blocks it from replacing itself.
+
+OPEN AT LOGIN
+  To have PropBook open when you log in, tick "Open PropBook when I sign in
+  to this computer" under Accounts > Updates and startup. PropBook needs to
+  be in your Applications folder for this. Untick it to turn it off.
 
 SHARING PROPBOOK
   The download contains no personal data. Your journal lives only in the
