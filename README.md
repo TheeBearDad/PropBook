@@ -92,7 +92,7 @@ The macOS app is a universal binary (Apple Silicon + Intel), ad-hoc signed by
 
 1. Bump `version` in `extension/manifest.json` if the extension changed.
 2. Optional: write the release notes in `release/notes/3.3.1.md`.
-3. Tag and push: `git tag v3.3.1 && git push origin v3.3.1`.
+3. Tag and push (`git tag v3.3.1 && git push origin v3.3.1`), or open **Actions → Release → Run workflow** and type the version.
 
 The **Release** workflow builds both zips, signs the checksums with the
 `PROPBOOK_SIGNING_KEY` repository secret, and publishes the GitHub release. Installed copies

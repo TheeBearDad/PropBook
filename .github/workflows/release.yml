@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: "Version to build, e.g. 3.3.1 (the tag v<version> must exist)"
+        description: "Version to publish, e.g. 3.3.0 (creates the tag v<version> if it doesn't exist)"
         required: true
 
 permissions:
