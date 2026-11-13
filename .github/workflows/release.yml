@@ -41,22 +41,35 @@ jobs:
         env:
           PROPBOOK_SIGNING_KEY: ${{ secrets.PROPBOOK_SIGNING_KEY }}
 
-      - name: Build
+      - name: Signing key
+        id: key
+        env:
+          PROPBOOK_SIGNING_KEY: ${{ secrets.PROPBOOK_SIGNING_KEY }}
+          GH_TOKEN: ${{ github.token }}
         run: |
-          if [ -z "$PROPBOOK_SIGNING_KEY" ]; then
-            echo "::error::The PROPBOOK_SIGNING_KEY secret isn't set, so installed copies couldn't verify this release."
-            exit 1
+          if [ -n "$PROPBOOK_SIGNING_KEY" ]; then echo "ok=1" >> "$GITHUB_OUTPUT"; exit 0; fi
+          V="${{ steps.v.outputs.version }}"
+          if gh release view "v$V" --json assets -q '.assets[].name' 2>/dev/null | grep -qx 'SHA256SUMS.txt.sig'; then
+            echo "::notice::No PROPBOOK_SIGNING_KEY secret, but v$V was already published with signed files. Nothing to do."
+            echo "ok=0" >> "$GITHUB_OUTPUT"; exit 0
           fi
-          bash release/build.sh "${{ steps.v.outputs.version }}"
+          echo "::error::Add the PROPBOOK_SIGNING_KEY secret (Settings > Secrets and variables > Actions). Without it, installed copies can't verify this release."
+          exit 1
+
+      - name: Build
+        if: steps.key.outputs.ok == '1'
+        run: bash release/build.sh "${{ steps.v.outputs.version }}"
         env:
           PROPBOOK_SIGNING_KEY: ${{ secrets.PROPBOOK_SIGNING_KEY }}
           PROPBOOK_REPO: ${{ github.repository }}
 
       - name: Check signature
+        if: steps.key.outputs.ok == '1'
         run: |
           go run ./tools/sign verify "$(grep -o 'updatePubKey = "[^"]*"' updater.go | cut -d'"' -f2)" dist/SHA256SUMS.txt
 
       - name: Publish
+        if: steps.key.outputs.ok == '1'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |

@@ -29,7 +29,7 @@ import (
 
 var (
 	version    = "dev"                  // set at build time: -X main.version=3.3.0
-	updateRepo = "TheeBearDad/propbook" // -X main.updateRepo=owner/name
+	updateRepo = "TheeBearDad/PropBook" // -X main.updateRepo=owner/name
 )
 
 // Public half of the release signing key (the private half is the PROPBOOK_SIGNING_KEY repository secret).

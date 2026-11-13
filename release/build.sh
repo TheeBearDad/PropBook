@@ -2,12 +2,12 @@
 # Builds the PropBook release into dist/: Windows and macOS zips, SHA256SUMS.txt, and (when
 # PROPBOOK_SIGNING_KEY is set) SHA256SUMS.txt.sig, which the app's updater checks.
 # usage: release/build.sh 3.3.0        (needs Go 1.24+ and Python 3 with Pillow)
-#   PROPBOOK_REPO=owner/name  where the app looks for updates (default TheeBearDad/propbook)
+#   PROPBOOK_REPO=owner/name  where the app looks for updates (default TheeBearDad/PropBook)
 #   PROPBOOK_LINUX=1          also build a Linux zip (used by the update tests)
 set -euo pipefail
 VERSION="${1:?usage: release/build.sh <version, e.g. 3.3.0>}"
 [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "version must look like 3.3.0" >&2; exit 1; }
-REPO="${PROPBOOK_REPO:-TheeBearDad/propbook}"
+REPO="${PROPBOOK_REPO:-TheeBearDad/PropBook}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 DIST="$ROOT/dist"
 WORK="$(mktemp -d)"

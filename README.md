@@ -82,7 +82,7 @@ Environment variables:
 | `PROPBOOK_BROWSER` | Path of the browser used for the window |
 | `PROPBOOK_NO_WINDOW` | Test mode: print the address instead of opening a window |
 | `PROPBOOK_SIGNING_KEY` | Release key (base64 ed25519 seed). Used by `build.sh` to sign `SHA256SUMS.txt` |
-| `PROPBOOK_REPO` | `owner/name` the build checks for updates (default `TheeBearDad/propbook`) |
+| `PROPBOOK_REPO` | `owner/name` the build checks for updates (default `TheeBearDad/PropBook`) |
 | `PROPBOOK_LINUX=1` | Also build a Linux zip |
 
 The macOS app is a universal binary (Apple Silicon + Intel), ad-hoc signed by
