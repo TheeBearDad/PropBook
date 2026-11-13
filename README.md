@@ -32,7 +32,7 @@ Each zip has a `Read Me.txt` that explains everything, including how to install 
 ### Install the extension
 
 1. Open PropBook once. It puts the extension in `Documents/PropBook/PropBook Sync`.
-   **Accounts → Open extension folder** opens that folder.
+   **Settings → Open extension folder** opens that folder.
 2. In Chrome or Brave go to `chrome://extensions`, turn on **Developer mode**, click
    **Load unpacked** and pick that folder.
 3. Copy the key from **Accounts** in PropBook into the extension's popup.
@@ -41,7 +41,7 @@ Each zip has a `Read Me.txt` that explains everything, including how to install 
 
 PropBook checks this repository's latest release when it opens, then every 6 hours. When a
 new version is out, a banner offers **Update now**. You can also turn on **Install updates
-automatically** under **Accounts → Updates**.
+automatically** under **Settings → Updates and startup**.
 
 - The app downloads the zip for your computer, checks it against `SHA256SUMS.txt`, and
   checks that file's ed25519 signature (`SHA256SUMS.txt.sig`) against the public key built

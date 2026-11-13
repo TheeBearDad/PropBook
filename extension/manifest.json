@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "PropBook Sync",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "Sends what you see on your prop firm dashboards (Lucid, Apex, Tradeify, Vest and others) to the PropBook desktop app, and routes Tradovate CSV exports to it.",
   "permissions": ["storage", "downloads", "alarms", "scripting"],
   "host_permissions": ["http://127.0.0.1:47321/*"],

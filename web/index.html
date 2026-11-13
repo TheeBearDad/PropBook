@@ -190,6 +190,8 @@ input[type=checkbox]{accent-color:var(--win);width:16px;height:16px;flex:none}
 .upd .spin{width:14px;height:14px;border-radius:50%;border:2px solid color-mix(in srgb,var(--focus) 30%,transparent);border-top-color:var(--focus);display:inline-block;vertical-align:-2px;margin-right:6px}
 @media (prefers-reduced-motion:no-preference){.upd .spin{animation:spin .8s linear infinite}}
 @keyframes spin{to{transform:rotate(360deg)}}
+.pref{display:flex;flex-direction:column;gap:8px}.pref+.pref{border-top:1px solid var(--line);padding-top:14px}
+h4.group-title{margin:0}
 .kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:13px}.kv dt{color:var(--muted)}.kv dd{margin:0;min-width:0;overflow-wrap:anywhere}
 .auto-banner{display:flex;gap:12px;align-items:center;justify-content:space-between;border-radius:8px;padding:8px 8px 8px 14px;font-size:13.5px;border:1px solid}
 .auto-banner.ok{border-color:color-mix(in srgb,var(--win) 50%,transparent);background:color-mix(in srgb,var(--win) 10%,var(--panel))}
@@ -280,6 +282,7 @@ td.pt{color:color-mix(in srgb,var(--win) 75%,var(--muted))}td.lt{color:color-mix
       <button class="btn icon" id="btn-theme" type="button" aria-label="Switch theme"></button>
       <button class="btn" id="btn-import" type="button">Import trades</button>
       <button class="btn" id="btn-settings" type="button">Accounts</button>
+      <button class="btn" id="btn-prefs" type="button">Settings</button>
       <button class="btn" id="btn-export" type="button" hidden>Export CSV</button>
       <button class="btn" id="btn-inbox" type="button" hidden title="Drop CSV files here to import them automatically">TradesCSV folder</button>
       <button class="btn primary" id="btn-new" type="button">+ Log trade</button>
@@ -475,16 +478,39 @@ td.pt{color:color-mix(in srgb,var(--win) 75%,var(--muted))}td.lt{color:color-mix
         <div class="addrow"><select id="s-merge"></select><button class="btn sm" type="button" id="s-merge-go" disabled>Merge</button></div>
         <span class="hint">Trades, journal notes and synced dashboard data move to the account you pick, and this one is removed.</span></div>
     </div>
-    <div class="netline" id="ext-box" hidden style="flex-direction:column;align-items:stretch;gap:8px">
-      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center"><span class="label">Browser extension key</span><span class="note" id="ext-state"></span></div>
+    <div class="foot">
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn sm danger ghost" type="button" id="s-delete">Delete account</button></div>
+      <div class="r"><button class="btn" type="button" data-close>Cancel</button><button class="btn primary" type="submit" id="s-save">Save</button></div>
+    </div>
+  </form>
+</div>
+
+<!-- Settings -->
+<div class="overlay" id="ov-prefs" hidden>
+  <div class="sheet" id="prefs" role="dialog" aria-modal="true" aria-labelledby="prefs-title">
+    <div class="sheet-head"><h3 id="prefs-title">Settings</h3><button class="x" type="button" data-close aria-label="Close">×</button></div>
+    <section class="pref">
+      <h4 class="group-title">Appearance</h4>
+    <div class="seg" role="radiogroup" aria-label="Appearance" style="align-self:flex-start"><input type="radio" name="appear" id="ap-sys" value="system"><label for="ap-sys">Match my computer</label><input type="radio" name="appear" id="ap-light" value="light"><label for="ap-light">Light</label><input type="radio" name="appear" id="ap-dark" value="dark"><label for="ap-dark">Dark</label></div>
+    </section>
+    <section class="pref">
+      <h4 class="group-title">Round-trip commission per contract</h4>
+      <div class="fgrid" id="s-comm"></div>
+      <span class="hint">Used to work out net P&amp;L on trades you log by hand. Changes save right away and apply to every account.</span>
+    </section>
+    <section class="pref" id="ext-box" hidden>
+      <h4 class="group-title">Browser extension</h4>
+    <div class="netline" style="flex-direction:column;align-items:stretch;gap:8px">
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center"><span class="label">Pairing key</span><span class="note" id="ext-state"></span></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><code class="num" id="ext-key" style="font-size:18px;font-weight:600;letter-spacing:.04em;user-select:all">—</code><button class="btn sm" type="button" id="ext-copy">Copy</button></div>
       <span class="hint">Paste this into the PropBook Sync extension once. It lets the extension send what it sees on your prop firm dashboards to this app, and nothing else can.</span>
       <dl class="kv"><dt>Extension</dt><dd id="ext-ver">—</dd><dt>Folder</dt><dd><code id="ext-dir" style="font-size:12px">—</code></dd></dl>
       <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn sm" type="button" id="ext-open">Open extension folder</button></div>
       <span class="hint">To install: in Chrome or Brave open <b>chrome://extensions</b>, turn on Developer mode, choose <b>Load unpacked</b> and pick this folder. PropBook keeps the folder up to date, and the extension reloads itself when it changes.</span>
     </div>
-    <div id="upd-box" hidden style="display:flex;flex-direction:column;gap:8px">
-      <div class="group-title">Updates and startup</div>
+    </section>
+    <section class="pref" id="upd-box" hidden>
+      <h4 class="group-title">Updates and startup</h4>
       <div class="netline" style="flex-direction:column;align-items:stretch;gap:8px">
         <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center"><span>You have PropBook <b class="num" id="upd-cur">—</b></span><span class="note" id="upd-state"></span></div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button class="btn sm" type="button" id="upd-check">Check for updates</button><button class="btn sm primary" type="button" id="upd-now" hidden>Update now</button><button class="btn sm ghost" type="button" id="upd-dl" hidden>Download page</button></div>
@@ -493,16 +519,14 @@ td.pt{color:color-mix(in srgb,var(--win) 75%,var(--muted))}td.lt{color:color-mix
         <span class="note" id="start-msg" hidden></span>
         <span class="hint">Updates come from PropBook's GitHub releases. Each one is checked against PropBook's signature before it's installed, and your journal is never touched.</span>
       </div>
-    </div>
-    <div class="group-title">Appearance</div>
-    <div class="seg" role="radiogroup" aria-label="Appearance" style="align-self:flex-start"><input type="radio" name="appear" id="ap-sys" value="system"><label for="ap-sys">Match my computer</label><input type="radio" name="appear" id="ap-light" value="light"><label for="ap-light">Light</label><input type="radio" name="appear" id="ap-dark" value="dark"><label for="ap-dark">Dark</label></div>
-    <div class="group-title">Round-trip commission per contract</div>
-    <div class="fgrid" id="s-comm"></div>
-    <div class="foot">
-      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn sm danger ghost" type="button" id="s-delete">Delete account</button><button class="btn sm" type="button" id="btn-folder" hidden>Open data folder</button></div>
-      <div class="r"><button class="btn" type="button" data-close>Cancel</button><button class="btn primary" type="submit" id="s-save">Save</button></div>
-    </div>
-  </form>
+    </section>
+    <section class="pref" id="data-box" hidden>
+      <h4 class="group-title">Your data</h4>
+      <span class="hint">Your journal, backups, screenshots and exports are kept in Documents/PropBook on this computer. Copy that folder to move PropBook to a new computer.</span>
+      <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn sm" type="button" id="btn-folder">Open data folder</button><button class="btn sm" type="button" id="btn-inbox2">Open TradesCSV folder</button></div>
+    </section>
+    <div class="foot"><span></span><div class="r"><button class="btn primary" type="button" data-close>Done</button></div></div>
+  </div>
 </div>
 
 <!-- Setups -->
@@ -1145,7 +1169,7 @@ function startUpdates(){
   $("start-login").addEventListener("change",e=>{const on=e.target.checked;e.target.disabled=true;
     api("/api/startup",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({enabled:on})}).then(r=>r.json()).then(k=>{showStartup(k);if(!k.error)toast(k.enabled?"PropBook will open when you sign in.":"PropBook won't open at sign-in anymore.")}).catch(()=>{e.target.disabled=false;e.target.checked=!on;toast("Couldn't change the startup setting. Restart PropBook and try again.")})});
   $("ext-open").addEventListener("click",()=>api("/api/open?dir=ext").catch(()=>{}));
-  api("/api/extkey").then(r=>r.json()).then(k=>{if(k.migratedFrom)showMsg(true,"Your journal moved from “"+esc(k.migratedFrom)+"” to the PropBook folder. If you used the Trade Journal Sync extension, remove it and load PropBook Sync from Accounts → Browser extension.")}).catch(()=>{});
+  api("/api/extkey").then(r=>r.json()).then(k=>{if(k.migratedFrom)showMsg(true,"Your journal moved from “"+esc(k.migratedFrom)+"” to the PropBook folder. If you used the Trade Journal Sync extension, remove it and load PropBook Sync from Settings → Browser extension.")}).catch(()=>{});
 }
 function showStartup(k){$("start-login").checked=!!k.enabled;$("start-login").disabled=false;$("start-msg").textContent=k.error||"";$("start-msg").hidden=!k.error}
 function loadStartup(){api("/api/startup").then(r=>r.json()).then(showStartup).catch(()=>{})}
@@ -1158,11 +1182,20 @@ function loadExtInfo(){api("/api/extkey").then(r=>r.json()).then(k=>{
   else v="PropBook Sync "+k.extSeen+" is connected, but "+k.extVersion+" is in the folder. If it doesn't update by itself, remove it and load the folder below.";
   $("ext-ver").textContent=v;$("ext-state").textContent=st}).catch(()=>{})}
 function openAccounts(id){
-  if(DESK){$("ext-box").hidden=false;$("upd-box").hidden=false;$("upd-auto").checked=settings.updates.auto;showUpdBox();loadExtInfo();loadStartup()}
-  $("s-comm").innerHTML=Object.keys(SYM).map(k=>'<div class="field"><label for="sc-'+k+'">'+k+'</label><input class="num" type="number" step="any" id="sc-'+k+'" value="'+(settings.commission[k]??0)+'"></div>').join("");
   fillAccountForm(id||(curAcc()?activeAcc:firstAccId()));if(id==="new")$("s-firm").setAttribute("autofocus","");else $("s-firm").removeAttribute("autofocus");openOv("ov-settings");
 }
 $("btn-settings").addEventListener("click",()=>openAccounts());
+function openPrefs(){
+  $("s-comm").innerHTML=Object.keys(SYM).map(k=>'<div class="field"><label for="sc-'+k+'">'+k+'</label><input class="num" type="number" step="any" min="0" id="sc-'+k+'" value="'+(settings.commission[k]??0)+'"></div>').join("");
+  applyTheme();
+  if(DESK){$("ext-box").hidden=false;$("upd-box").hidden=false;$("data-box").hidden=false;$("upd-auto").checked=settings.updates.auto;showUpdBox();loadExtInfo();loadStartup()}
+  openOv("ov-prefs");
+}
+$("btn-prefs").addEventListener("click",openPrefs);
+let commT;$("s-comm").addEventListener("input",()=>{clearTimeout(commT);commT=setTimeout(async()=>{
+  Object.keys(SYM).forEach(k=>{const v=+$("sc-"+k).value;settings.commission[k]=v>=0?v:0});
+  try{await Store.saveSettings();toast("Commissions saved")}catch(err){toast(errMsg(err))}},600)});
+
 $("btn-theme").addEventListener("click",()=>setTheme(effectiveDark()?"light":"dark"));
 document.querySelectorAll('input[name="appear"]').forEach(x=>x.addEventListener("change",()=>{if(x.checked)setTheme(x.value)}));
 $("s-pick").addEventListener("change",e=>fillAccountForm(e.target.value));
@@ -1185,7 +1218,6 @@ $("set-form").addEventListener("submit",async e=>{e.preventDefault();
   let id=editAcc;
   if(id==="new"){id=uid("acc_");settings.accounts.push(Object.assign({id,links:[]},vals))}
   else{const a=accById(id);if(r2(+a.startBalance||0)!==r2(vals.startBalance)){delete a.syncBalance;delete a.syncDate}Object.assign(a,vals)}
-  Object.keys(SYM).forEach(k=>settings.commission[k]=+$("sc-"+k).value||0);
   if(vals.hidden&&activeAcc===id)activeAcc="all";else if(editAcc==="new")activeAcc=id;
   try{await Store.saveSettings();closeOv("ov-settings");toast(editAcc==="new"?"Account added":"Account saved");render()}catch(err){toast(errMsg(err))}});
 $("s-delete").addEventListener("click",()=>{const a=accById(editAcc);if(!a)return;const mine=trades.filter(t=>accOf(t)===a.id);
@@ -1204,7 +1236,7 @@ $("s-merge-go").addEventListener("click",()=>{const src=accById(editAcc),dst=acc
 $("ext-copy").addEventListener("click",()=>{const t=$("ext-key").textContent;try{navigator.clipboard.writeText(t).then(()=>toast("Key copied"),()=>{selectKey()})}catch(e){selectKey()}});
 function selectKey(){const r=document.createRange();r.selectNodeContents($("ext-key"));const s=getSelection();s.removeAllRanges();s.addRange(r);toast("Key selected. Press "+(/Mac/.test(navigator.platform)?"⌘C":"Ctrl+C")+" to copy.")}
 function openInbox(){if(DESK)api("/api/open?dir=inbox",{method:"POST"}).catch(()=>toast("Couldn't open the folder."))}
-$("btn-inbox").addEventListener("click",openInbox);$("imp-open-inbox").addEventListener("click",openInbox);
+$("btn-inbox").addEventListener("click",openInbox);$("btn-inbox2").addEventListener("click",openInbox);$("imp-open-inbox").addEventListener("click",openInbox);
 $("auto-x").addEventListener("click",()=>{$("auto-banner").hidden=true;autoMsgs=[]});
 $("btn-folder").addEventListener("click",()=>{if(DESK)api("/api/open",{method:"POST"}).catch(()=>toast("Couldn't open the folder."))});
 

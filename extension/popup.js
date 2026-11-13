@@ -17,8 +17,8 @@ async function refresh() {
   const map = {
     connected: ["ok", "Connected to PropBook", s.queued ? s.queued + " update(s) waiting to send" : "Everything is delivered"],
     closed: ["warn", "PropBook app isn't open", s.queued ? s.queued + " update(s) will send when you open it" : "Open the app to receive updates"],
-    badkey: ["bad", "Key doesn't match the app", "Copy the key again from the app's Accounts screen"],
-    nokey: ["warn", "Not paired yet", "Paste the key from the app's Accounts screen"]
+    badkey: ["bad", "Key doesn't match the app", "Copy the key again from PropBook's Settings window"],
+    nokey: ["warn", "Not paired yet", "Paste the key from PropBook's Settings window"]
   }[s.app] || ["", "Unknown", ""];
   $("dot").className = "dot " + map[0]; $("st").textContent = map[1]; $("sub").textContent = map[2];
   $("last").textContent = s.last ? "Last read " + ago(s.last.at) + ": " + (s.last.summary || "dashboard") : "Open a prop firm account page and it syncs on its own.";

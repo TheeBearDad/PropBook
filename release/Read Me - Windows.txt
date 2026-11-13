@@ -98,7 +98,7 @@ BROWSER EXTENSION (Chrome or Brave) - syncs from your prop firm dashboards
   Install (one time):
   1. Open PropBook once. It puts the extension in
         Documents\PropBook\PropBook Sync
-     (Accounts > Browser extension > "Open extension folder" shows it).
+     (Settings > Browser extension > "Open extension folder" shows it).
   2. Chrome: go to  chrome://extensions   Brave: go to  brave://extensions
   3. Turn on "Developer mode" (top right).
   4. Click "Load unpacked" and choose that "PropBook Sync" folder.
@@ -109,7 +109,7 @@ BROWSER EXTENSION (Chrome or Brave) - syncs from your prop firm dashboards
   page first, then load PropBook Sync as above.
 
   Pair it with the app (one time):
-  1. In the app, open "Accounts". Copy the "Browser extension key".
+  1. In the app, open "Settings". Copy the pairing key under "Browser extension".
   2. Click the extension's icon, paste the key, click Save.
 
   Dashboards differ from firm to firm. Lucid's layout was used to build the
@@ -133,14 +133,14 @@ VEST MARKETS (crypto perps)
   "Copy page text" or send a sample export along with the problem report.
 
 LIGHT AND DARK MODE
-  The sun/moon button at the top switches between light and dark. Accounts >
+  The sun/moon button at the top switches between light and dark. Settings >
   Appearance can also set it to match your computer.
 
 UPDATES
   PropBook checks for a new version when it opens and every few hours. When
   one is out, a bar at the top says so: click "Update now" and PropBook
   downloads it, checks it, and restarts on the new version. Your journal is
-  untouched. Turn on "Install updates automatically" under Accounts >
+  untouched. Turn on "Install updates automatically" under Settings >
   Updates and startup to skip the click. Updates are signed, and PropBook refuses any
   download whose signature or checksum doesn't match.
   The browser extension updates with the app: PropBook refreshes the files in
@@ -148,7 +148,7 @@ UPDATES
 
 OPEN AT SIGN-IN AND THE TASKBAR
   To have PropBook open when you sign in to Windows, tick "Open PropBook when
-  I sign in to this computer" under Accounts > Updates and startup. It shows
+  I sign in to this computer" under Settings > Updates and startup. It shows
   up in Settings > Apps > Startup too, where you can also turn it off.
   To pin PropBook to the taskbar, open it, right-click its taskbar button
   and choose "Pin to taskbar". The pin uses the PropBook icon and starts
