@@ -52,7 +52,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .note{font-size:12.5px;color:var(--muted)}
 
 /* summary */
-.summary{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:16px}
+.summary{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:16px}
 .month-block{padding:18px 20px;display:flex;flex-direction:column;gap:6px}
 .month-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
 .month-head h2{font-family:var(--display);font-size:40px;line-height:1;margin:0;letter-spacing:-.02em}
@@ -61,7 +61,10 @@ button,input,select,textarea{font:inherit;color:inherit}
 .big{font-family:var(--mono);font-size:44px;font-weight:600;letter-spacing:-.02em;line-height:1.1;margin-top:8px}
 .sub{color:var(--muted);font-size:13.5px}
 .sub b{color:var(--fg);font-weight:600}
-.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.tiles-wrap{container-type:inline-size;min-width:0;display:flex}.tiles-wrap>.tiles{flex:1}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+@container (min-width:560px){.tiles{grid-template-columns:repeat(5,minmax(0,1fr))}}
+@container (max-width:720px){.tile{padding:12px 12px}.tile .v{font-size:17px}}
 .tile{background:var(--panel);padding:14px 16px;display:flex;flex-direction:column;gap:4px;min-width:0}
 .tile .v{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:19px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tile .s{font-size:12px;color:var(--muted)}
@@ -192,6 +195,7 @@ input[type=checkbox]{accent-color:var(--win);width:16px;height:16px;flex:none}
 @keyframes spin{to{transform:rotate(360deg)}}
 .pref{display:flex;flex-direction:column;gap:8px}.pref+.pref{border-top:1px solid var(--line);padding-top:14px}
 h4.group-title{margin:0}
+.rcell{white-space:nowrap}.rcell .note{display:block;font-size:11.5px}
 .kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:13px}.kv dt{color:var(--muted)}.kv dd{margin:0;min-width:0;overflow-wrap:anywhere}
 .auto-banner{display:flex;gap:12px;align-items:center;justify-content:space-between;border-radius:8px;padding:8px 8px 8px 14px;font-size:13.5px;border:1px solid}
 .auto-banner.ok{border-color:color-mix(in srgb,var(--win) 50%,transparent);background:color-mix(in srgb,var(--win) 10%,var(--panel))}
@@ -309,7 +313,7 @@ td.pt{color:color-mix(in srgb,var(--win) 75%,var(--muted))}td.lt{color:color-mix
       <div class="big num" id="m-net">$0.00</div>
       <div class="sub" id="m-line"></div>
     </div>
-    <div class="tiles" id="tiles"></div>
+    <div class="tiles-wrap"><div class="tiles" id="tiles"></div></div>
   </section>
 
   <section class="panel equity">
@@ -354,7 +358,7 @@ td.pt{color:color-mix(in srgb,var(--win) 75%,var(--muted))}td.lt{color:color-mix
     </div>
     <div class="table-box">
       <table>
-        <thead><tr><th>Date</th><th>Time</th><th id="th-acc">Account</th><th>Symbol</th><th>Side</th><th class="num">Qty</th><th class="num">Entry</th><th class="num">Exit</th><th class="num">Held</th><th class="num">Profit time</th><th class="num">Loss time</th><th class="num">Gross</th><th class="num">Comm.</th><th class="num">Net P&amp;L</th><th>Setup</th><th>Feeling</th><th>Grade</th></tr></thead>
+        <thead><tr><th>Date</th><th>Time</th><th id="th-acc">Account</th><th>Symbol</th><th>Side</th><th class="num">Qty</th><th class="num">Entry</th><th class="num">Exit</th><th class="num">Held</th><th class="num">Profit time</th><th class="num">Loss time</th><th class="num">Gross</th><th class="num">Comm.</th><th class="num">Net P&amp;L</th><th class="num" title="Result in R (net P&amp;L ÷ risk) and planned risk : reward">R</th><th>Setup</th><th>Feeling</th><th>Grade</th></tr></thead>
         <tbody id="hist"></tbody>
       </table>
     </div>
@@ -384,10 +388,13 @@ td.pt{color:color-mix(in srgb,var(--win) 75%,var(--muted))}td.lt{color:color-mix
       <div class="field"><label for="f-entry">Entry price</label><input class="num" type="number" id="f-entry" step="any" inputmode="decimal"></div>
       <div class="field"><label for="f-exit">Exit price</label><input class="num" type="number" id="f-exit" step="any" inputmode="decimal"></div>
       <div class="field"><label for="f-stop">Stop price</label><input class="num" type="number" id="f-stop" step="any" inputmode="decimal"></div>
+      <div class="field"><label for="f-target">Target price</label><input class="num" type="number" id="f-target" step="any" inputmode="decimal"></div>
+      <div class="field"><label for="f-risk">Risk ($)</label><input class="num" type="number" id="f-risk" step="any" min="0" inputmode="decimal"><span class="hint" id="risk-hint">Fills in from your stop.</span></div>
+      <div class="field c2"><label for="f-rr">Planned risk : reward</label><input class="num" id="f-rr" placeholder="e.g. 1:2" autocomplete="off" spellcheck="false" inputmode="decimal"><span class="hint" id="rr-hint">Fills in from your stop and target, or type it, like 1:2 or 2.</span></div>
       <div class="field c2"><label for="f-gross">Gross P&amp;L ($)</label><input class="num" type="number" id="f-gross" step="any" inputmode="decimal"><span class="hint">Fills in from your prices. Type over it to override.</span></div>
       <div class="field c2"><label for="f-comm">Commission ($)</label><input class="num" type="number" id="f-comm" step="any" inputmode="decimal"><span class="hint" id="comm-hint"></span></div>
     </div>
-    <div class="netline"><span class="label">Net</span><span class="big2" id="net-prev">$0.00</span><span class="note num" id="pts-prev"></span></div>
+    <div class="netline"><span class="label">Net</span><span class="big2" id="net-prev">$0.00</span><span class="note num" id="pts-prev"></span><span class="note num" id="r-prev"></span></div>
 
     <div class="group-title">Time in the trade</div>
     <div class="fgrid">
@@ -712,12 +719,14 @@ async function init(){
 
 /* ---------- stats ---------- */
 function stats(list){
-  let n=0,w=0,l=0,gw=0,gl=0,tot=0,j=0;const hold={all:[],win:[],loss:[]};
+  let n=0,w=0,l=0,gw=0,gl=0,tot=0,j=0;const hold={all:[],win:[],loss:[]},rrs=[],rs=[];
   list.forEach(t=>{const v=net(t);tot+=v;if(t.synthetic==="fill")return;n++;if(v>0){w++;gw+=v}else if(v<0){l++;gl+=v}if(hasJournal(t))j++;
+    const pr=plannedRR(t);if(pr!=null)rrs.push(pr);const rr=resultR(t);if(rr!=null)rs.push(rr);
     const h=holdOf(t);if(h!=null){hold.all.push(h);if(v>0)hold.win.push(h);else if(v<0)hold.loss.push(h)}});
   const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:null;
   return {n,w,l,net:r2(tot),wr:(w+l)?w/(w+l):null,avgW:w?gw/w:0,avgL:l?gl/l:0,pf:gl?gw/Math.abs(gl):(gw?Infinity:null),journaled:j,
-    hold:avg(hold.all),holdW:avg(hold.win),holdL:avg(hold.loss),timed:hold.all.length};
+    hold:avg(hold.all),holdW:avg(hold.win),holdL:avg(hold.loss),timed:hold.all.length,
+    rr:avg(rrs),rrN:rrs.length,r:avg(rs),rN:rs.length,rSum:rs.reduce((a,b)=>a+b,0)};
 }
 /* Journal trades plus what each firm's dashboard reports (via the extension). A dashboard trade that matches a journal
    trade (same account, day, contract, size and net) is not counted twice; anything left in the dashboard's day total
@@ -783,6 +792,7 @@ function render(){
   $("m-line").innerHTML='YTD through '+MONTHS[view.m].slice(0,3)+' <b class="num '+cls(yt.net)+'">'+money(yt.net)+'</b> · '+(acc?"Balance":"Combined balance")+' <b class="num">'+money(bal,false)+'</b>';
   const dnets=dayKeys.map(k=>({k,v:r2(dmap[k].reduce((s,t)=>s+net(t),0))}));
   const best=dnets.reduce((a,b)=>!a||b.v>a.v?b:a,null),worst=dnets.reduce((a,b)=>!a||b.v<a.v?b:a,null);
+  const allSt=stats(scoped);
   const tile=(lab,val,sub,c)=>'<div class="tile"><span class="label">'+lab+'</span><span class="v '+(c||"")+'">'+val+'</span><span class="s">'+sub+'</span></div>';
   $("tiles").innerHTML=
     tile("Win rate",st.wr==null?"—":Math.round(st.wr*100)+"%",st.w+" of "+(st.w+st.l)+" closed · "+st.n+" trade"+(st.n===1?"":"s"))+
@@ -792,6 +802,8 @@ function render(){
     tile("Best day",best?money(best.v):"—",best?fmtDay(best.k):"",best&&best.v>0?"pos":"")+
     tile("Worst day",worst&&worst.v<0?money(worst.v):"—",worst&&worst.v<0?fmtDay(worst.k):"",worst&&worst.v<0?"neg":"")+
     tile("Avg time in trade",st.hold!=null?fmtDur(st.hold):"—",st.hold==null?"add entry and exit times":(st.holdW!=null?"wins "+fmtDur(st.holdW):"")+(st.holdW!=null&&st.holdL!=null?" · ":"")+(st.holdL!=null?"losses "+fmtDur(st.holdL):""))+
+    tile("Avg R:R",st.rrN?fmtRR(st.rr):"—",st.rrN?st.rrN+" of "+st.n+" trade"+(st.n===1?"":"s")+" · all time "+fmtRR(allSt.rr):(allSt.rrN?"all time "+fmtRR(allSt.rr):"add a stop and target"))+
+    tile("Avg result",st.rN?fmtR(st.r):"—",st.rN?"total "+fmtR(st.rSum)+" · "+st.rN+" trade"+(st.rN===1?"":"s"):"add a stop or risk ($)",st.rN?cls(st.r):"")+
     tile("Journaled",st.n?st.journaled+" / "+st.n:"—",st.n?Math.round(st.journaled/st.n*100)+"% of trades have notes":"write after each trade",st.n&&st.journaled===st.n?"pos":"");
   if(acc)renderMeter(acc,bal);else renderAccountList();
   renderEquity(acc,scoped);renderCalendar(dmap);renderInsights(scope==="month"?mt:scoped);renderHistory(mt);
@@ -890,16 +902,18 @@ function renderInsights(list){
 }
 function feelHtml(fs){return (fs||[]).map(x=>'<span class="feel '+(GOOD.has(x)?"good":"bad")+'">'+esc(x)+'</span>').join("")}
 function accChip(t){const a=accById(accOf(t));return '<span class="lchip">'+esc(a?(a.firm?a.firm+" ":"")+(a.name||""):"")+'</span>'}
+function rCell(t){if(t.synthetic==="fill")return '<td></td>';const r=resultR(t),p=plannedRR(t);
+  return '<td class="num rcell">'+(r!=null?'<span class="'+cls(r)+'">'+fmtR(r)+'</span>':"")+(p!=null?'<span class="note">'+fmtRR(p)+'</span>':"")+'</td>'}
 function renderHistory(mt){
   const all=activeAcc==="all";$("th-acc").hidden=!all;
   const list=sortTrades(mt).reverse(),n=list.filter(t=>t.synthetic!=="fill").length;
   $("hist-count").textContent=n+" trade"+(n===1?"":"s")+" in "+MONTHS[view.m];
-  if(!list.length){$("hist").innerHTML='<tr><td colspan="17" class="empty" style="cursor:default">No trades in '+MONTHS[view.m]+'. Use “+ Log trade” or import a Tradovate CSV.</td></tr>';return}
+  if(!list.length){$("hist").innerHTML='<tr><td colspan="18" class="empty" style="cursor:default">No trades in '+MONTHS[view.m]+'. Use “+ Log trade” or import a Tradovate CSV.</td></tr>';return}
   const tcell=(v,c)=>'<td class="num '+c+'">'+(v!=null&&v>0?fmtDur(v):"")+'</td>';
   const fromDash=t=>t.profitSec==null&&t.lossSec==null&&rowOf(t)?' title="From '+esc(firmOf(accOf(t)))+': how long the winning and losing trades were held"':"";
   $("hist").innerHTML=list.map(t=>{const v=net(t);const [y,m,d]=t.date.split("-");const firm=firmOf(accOf(t));
     const symCell=t.synthetic==="fill"?'<span class="note">'+(t.hasReal?"Unlogged ("+esc(firm)+")":esc(firm)+" day total")+'</span>':(t.symbol?'<span class="sym">'+esc(t.symbol)+'</span>':'<span class="note">Day total</span>');
-    return '<tr data-trade="'+esc(t.id)+'"'+(t.synthetic?' class="from-lucid"':'')+'><td class="num">'+m+"/"+d+"/"+y+'</td><td class="num">'+esc(t.time||"")+'</td>'+(all?'<td>'+accChip(t)+'</td>':'')+'<td>'+symCell+'</td><td>'+esc(t.side||"")+'</td><td class="num">'+esc(t.qty||"")+'</td><td class="num">'+(t.entry!=null&&t.entry!==""?esc(t.entry):"")+'</td><td class="num">'+(t.exit!=null&&t.exit!==""?esc(t.exit):"")+'</td>'+tcell(holdOf(t),"")+tcell(profitTimeOf(t),"pt").replace("<td",'<td'+fromDash(t))+tcell(lossTimeOf(t),"lt").replace("<td",'<td'+fromDash(t))+'<td class="num">'+money(t.gross)+'</td><td class="num zero">'+(+t.commission?money(t.commission,false):"")+'</td><td class="num '+cls(v)+'" style="font-weight:600">'+money(v)+'</td><td>'+(t.synthetic==="row"?'<span class="lchip">From '+esc(firm)+' · not journaled</span>':esc(setupsOf(t).join(" + ")))+'</td><td>'+feelHtml(t.feelings)+'</td><td>'+(t.grade?'<span class="grade g-'+esc(t.grade)+'">'+esc(t.grade)+'</span>':"")+'</td></tr>'}).join("");
+    return '<tr data-trade="'+esc(t.id)+'"'+(t.synthetic?' class="from-lucid"':'')+'><td class="num">'+m+"/"+d+"/"+y+'</td><td class="num">'+esc(t.time||"")+'</td>'+(all?'<td>'+accChip(t)+'</td>':'')+'<td>'+symCell+'</td><td>'+esc(t.side||"")+'</td><td class="num">'+esc(t.qty||"")+'</td><td class="num">'+(t.entry!=null&&t.entry!==""?esc(t.entry):"")+'</td><td class="num">'+(t.exit!=null&&t.exit!==""?esc(t.exit):"")+'</td>'+tcell(holdOf(t),"")+tcell(profitTimeOf(t),"pt").replace("<td",'<td'+fromDash(t))+tcell(lossTimeOf(t),"lt").replace("<td",'<td'+fromDash(t))+'<td class="num">'+money(t.gross)+'</td><td class="num zero">'+(+t.commission?money(t.commission,false):"")+'</td><td class="num '+cls(v)+'" style="font-weight:600">'+money(v)+'</td>'+rCell(t)+'<td>'+(t.synthetic==="row"?'<span class="lchip">From '+esc(firm)+' · not journaled</span>':esc(setupsOf(t).join(" + ")))+'</td><td>'+feelHtml(t.feelings)+'</td><td>'+(t.grade?'<span class="grade g-'+esc(t.grade)+'">'+esc(t.grade)+'</span>':"")+'</td></tr>'}).join("");
 }
 $("tabs").addEventListener("click",e=>{if(e.target.closest("#tab-add")){openAccounts("new");return}const b=e.target.closest("[data-acc]");if(b)setActive(b.dataset.acc)});
 $("meter").addEventListener("click",e=>{if(e.target.closest("[data-setup]")){openAccounts(activeAcc);return}const b=e.target.closest("[data-acc]");if(b)setActive(b.dataset.acc)});
@@ -916,6 +930,7 @@ $("cf-yes").addEventListener("click",async()=>{const f=confirmFn;confirmFn=null;
 function accOptions(sel,selected,withHidden){sel.innerHTML=accounts().filter(a=>withHidden||!a.hidden||a.id===selected).map(a=>'<option value="'+esc(a.id)+'"'+(a.id===selected?" selected":"")+'>'+esc(accLabel(a))+(a.hidden?" (hidden)":"")+'</option>').join("")}
 
 /* trade form */
+let riskTouched=false,rrTouched=false;
 let editing=null,grossTouched=false,commTouched=false,shot=null,selFeel=new Set(),lucidPrefill=null;
 function buildSeg(id,name,vals){$(id).innerHTML=vals.map((v,i)=>'<input type="radio" name="'+name+'" id="'+name+"-"+i+'" value="'+v+'"><label for="'+name+"-"+i+'">'+v+'</label>').join("")}
 buildSeg("f-conf","conf",["1","2","3","4","5"]);buildSeg("f-plan","plan",["Yes","Partly","No"]);buildSeg("f-grade","grade",["A","B","C","D","F"]);
@@ -924,6 +939,22 @@ $("f-feel").addEventListener("click",e=>{const b=e.target.closest("[data-feel]")
 function setRadio(name,v){document.querySelectorAll('input[name="'+name+'"]').forEach(r=>r.checked=(r.value===String(v)))}
 function getRadio(name){const r=document.querySelector('input[name="'+name+'"]:checked');return r?r.value:""}
 function numOrNull(id){const v=$(id).value;return v===""?null:+v}
+/* ---------- risk : reward ----------
+   rr is the planned reward for 1 unit of risk (2 means 1:2). risk is the dollars at risk. Both can be typed, or come from
+   entry, stop and target. The result in R is net P&L divided by the dollars at risk. */
+function pvOf(t){return (SYM[t.symbol]&&SYM[t.symbol].pv)||(+t.pv||null)}
+function riskFromPrices(en,stop,qty,pv){if(en==null||stop==null||!pv)return null;const d=Math.abs(en-stop)*(+qty||1)*pv;return d>0?r2(d):null}
+function rrFromPrices(en,stop,tg){if(en==null||stop==null||tg==null)return null;const risk=Math.abs(en-stop),rew=Math.abs(tg-en);return risk>0&&rew>0?Math.round(rew/risk*100)/100:null}
+function riskOf(t){if(+t.risk>0)return +t.risk;return riskFromPrices(t.entry,t.stop,t.qty,pvOf(t))}
+function plannedRR(t){if(+t.rr>0)return +t.rr;return rrFromPrices(t.entry,t.stop,t.target)}
+function resultR(t){const k=riskOf(t);return k?net(t)/k:null}
+function trimNum(x,d){return String(+x.toFixed(d))}
+function fmtRR(x){return x==null?"":"1:"+trimNum(x,2)}
+function fmtR(x){return x==null?"":(x>0?"+":x<0?"−":"")+trimNum(Math.abs(x),2)+"R"}
+/* "1:2", "1/2", "2", "2R", "1 to 2" → 2. Written as risk : reward, so "2:1" means risking 2 to make 1 (0.5). */
+function parseRR(v){v=String(v||"").trim().toLowerCase().replace(/\s+/g," ");if(!v)return null;
+  let m=v.match(/^(\d*\.?\d+) ?(?::|\/| to ) ?(\d*\.?\d+)$/);if(m){const a=+m[1],b=+m[2];return a>0&&b>0?Math.round(b/a*100)/100:NaN}
+  m=v.match(/^(\d*\.?\d+) ?r?$/);if(m)return +m[1]>0?Math.round(+m[1]*100)/100:NaN;return NaN}
 function symbolMode(){const other=$("f-symbol").value==="__other";$("f-csym-f").hidden=!other;$("f-pv-f").hidden=!other;
   $("f-qty-lbl").textContent=other?"Size":"Contracts";$("f-qty").step=other?"any":"1";$("f-qty").min=other?"0":"1"}
 function recalc(){
@@ -934,8 +965,19 @@ function recalc(){
   $("comm-hint").textContent=spec?"$"+(settings.commission[sym]||0).toFixed(2)+" per contract round trip":"";
   const v=r2((+$("f-gross").value||0)-(+$("f-comm").value||0));const np=$("net-prev");np.textContent=money(v);np.className="big2 "+cls(v);
   $("pts-prev").textContent=pts;
+  const pv=spec?spec.pv:null,stop=numOrNull("f-stop"),tg=numOrNull("f-target");
+  const autoRisk=riskFromPrices(en,stop,q,pv),autoRR=rrFromPrices(en,stop,tg);
+  if(!riskTouched)$("f-risk").value=autoRisk??"";
+  if(!rrTouched)$("f-rr").value=autoRR!=null?fmtRR(autoRR):"";
+  $("risk-hint").textContent=riskTouched||autoRisk==null?"Dollars lost if the stop is hit.":"From your stop: "+r2(Math.abs(en-stop))+" pts × "+q+" × $"+pv+".";
+  const rr=parseRR($("f-rr").value),bad=Number.isNaN(rr);$("f-rr").setAttribute("aria-invalid",bad?"true":"false");
+  $("rr-hint").textContent=bad?"Type it like 1:2 (risk 1 to make 2), or just 2.":rr!=null?"Risk 1 to make "+trimNum(rr,2)+"."+(!rrTouched&&autoRR!=null?" From your stop and target.":""):"Fills in from your stop and target, or type it, like 1:2 or 2.";
+  const risk=+$("f-risk").value||0,res=risk>0?v/risk:null;
+  $("r-prev").innerHTML=res!=null?'Result <b class="'+cls(res)+'">'+fmtR(res)+'</b> on '+money(risk,false)+' risk':"";
 }
-["f-symbol","f-qty","f-entry","f-exit","f-pv","side-long","side-short"].forEach(id=>$(id).addEventListener("input",recalc));
+["f-symbol","f-qty","f-entry","f-exit","f-pv","side-long","side-short","f-stop","f-target","f-gross","f-comm"].forEach(id=>$(id).addEventListener("input",recalc));
+$("f-risk").addEventListener("input",()=>{riskTouched=$("f-risk").value!=="";recalc()});
+$("f-rr").addEventListener("input",()=>{rrTouched=$("f-rr").value.trim()!=="";recalc()});
 $("f-symbol").addEventListener("change",symbolMode);
 ["f-symbol","side-long","side-short"].forEach(id=>$(id).addEventListener("change",recalc));
 $("f-gross").addEventListener("input",()=>{grossTouched=$("f-gross").value!=="";recalc()});
@@ -993,7 +1035,10 @@ function openTrade(t,date){
   $("f-symbol").value=!t?"MNQ":known?(d.symbol||""):"__other";$("f-csym").value=known?"":d.symbol;$("f-pv").value=d.pv||1;symbolMode();
   $("f-qty").value=d.qty||1;
   setRadio("side",d.side||"Long");
-  $("f-entry").value=d.entry??"";$("f-exit").value=d.exit??"";$("f-stop").value=d.stop??"";
+  $("f-entry").value=d.entry??"";$("f-exit").value=d.exit??"";$("f-stop").value=d.stop??"";$("f-target").value=d.target??"";
+  const aR=riskFromPrices(d.entry,d.stop,d.qty,pvOf(d)),aRR=rrFromPrices(d.entry,d.stop,d.target);
+  riskTouched=+d.risk>0&&(aR==null||Math.abs(+d.risk-aR)>0.005);rrTouched=+d.rr>0&&(aRR==null||Math.abs(+d.rr-aRR)>0.005);
+  $("f-risk").value=riskTouched?d.risk:"";$("f-rr").value=rrTouched?fmtRR(+d.rr):"";
   $("f-gross").value=t?(d.gross??""):"";$("f-comm").value=t?(d.commission??""):"";
   grossTouched=!!t;commTouched=!!t;
   selSetups=new Set(setupsOf(d));renderSetupChips();$("f-new-setup").value="";
@@ -1016,11 +1061,13 @@ $("trade-form").addEventListener("submit",async e=>{
   const T=parseDur($("f-dur").value),P=parseDur($("f-in-profit").value),L=parseDur($("f-in-loss").value);
   const other=$("f-symbol").value==="__other",sym=other?N($("f-csym").value).replace(/\s+/g,""):$("f-symbol").value;
   if(other&&!sym){toast("Type the symbol you traded, e.g. BTC-PERP.");$("f-csym").focus();return}
+  const rrIn=parseRR($("f-rr").value);if(Number.isNaN(rrIn)){toast("Type the risk : reward like 1:2, or just 2.");$("f-rr").focus();return}
   const base=editing||(lucidPrefill?{lucidKey:lucidPrefill,source:"sync"}:{});
   const t=Object.assign({},base,{
     id:editing?editing.id:uid("t"),accountId:$("f-account").value||defaultAccId(),
     date:$("f-date").value,time:$("f-time").value,symbol:sym,side:sym?getRadio("side"):"",qty:+$("f-qty").value||1,pv:other?(+$("f-pv").value||1):undefined,
-    entry:numOrNull("f-entry"),exit:numOrNull("f-exit"),stop:numOrNull("f-stop"),
+    entry:numOrNull("f-entry"),exit:numOrNull("f-exit"),stop:numOrNull("f-stop"),target:numOrNull("f-target"),
+    risk:+$("f-risk").value>0?r2(+$("f-risk").value):null,rr:rrIn,
     gross:r2(+$("f-gross").value||0),commission:r2(+$("f-comm").value||0),
     exitTime:$("f-exit-time").value,durSec:T,profitSec:P,lossSec:L,
     setups:[...selSetups],setup:[...selSetups].join(" + "),saw:$("f-saw").value.trim(),why:$("f-why").value.trim(),lesson:$("f-lesson").value.trim(),
@@ -1258,7 +1305,7 @@ function mapRows(rows){
   if(hdr.includes("date")&&hdr.includes("gross")&&hdr.includes("saw")){
     const ix=n=>hdr.indexOf(n),g=(r,n)=>ix(n)>=0?r[ix(n)]:"",nn=v=>v===""||v==null?null:+v;
     for(let i=1;i<rows.length;i++){const r=rows[i];if(!g(r,"date"))continue;const k="j-"+g(r,"date")+"-"+g(r,"time")+"-"+g(r,"symbol")+"-"+g(r,"qty")+"-"+g(r,"entry")+"-"+g(r,"exit")+"-"+g(r,"gross");
-      out.push({id:g(r,"id")||safeId(k),accountName:g(r,"account"),date:g(r,"date"),time:g(r,"time"),symbol:g(r,"symbol"),side:g(r,"side"),qty:+g(r,"qty")||1,entry:nn(g(r,"entry")),exit:nn(g(r,"exit")),stop:nn(g(r,"stop")),gross:+g(r,"gross")||0,commission:+g(r,"commission")||0,setup:g(r,"setup"),setups:g(r,"setups")?g(r,"setups").split(/;\s*/).filter(Boolean):undefined,exitTime:g(r,"exittime"),durSec:nn(g(r,"dursec")),profitSec:nn(g(r,"profitsec")),lossSec:nn(g(r,"losssec")),feelings:g(r,"feelings")?g(r,"feelings").split(/;\s*/).filter(Boolean):[],confidence:g(r,"confidence"),plan:g(r,"plan"),grade:g(r,"grade"),saw:g(r,"saw"),why:g(r,"why"),lesson:g(r,"lesson"),source:g(r,"source")||"journal-export",notes:g(r,"notes")})}
+      out.push({id:g(r,"id")||safeId(k),accountName:g(r,"account"),date:g(r,"date"),time:g(r,"time"),symbol:g(r,"symbol"),side:g(r,"side"),qty:+g(r,"qty")||1,entry:nn(g(r,"entry")),exit:nn(g(r,"exit")),stop:nn(g(r,"stop")),target:nn(g(r,"target")),risk:nn(g(r,"risk")),rr:nn(g(r,"rr")),gross:+g(r,"gross")||0,commission:+g(r,"commission")||0,setup:g(r,"setup"),setups:g(r,"setups")?g(r,"setups").split(/;\s*/).filter(Boolean):undefined,exitTime:g(r,"exittime"),durSec:nn(g(r,"dursec")),profitSec:nn(g(r,"profitsec")),lossSec:nn(g(r,"losssec")),feelings:g(r,"feelings")?g(r,"feelings").split(/;\s*/).filter(Boolean):[],confidence:g(r,"confidence"),plan:g(r,"plan"),grade:g(r,"grade"),saw:g(r,"saw"),why:g(r,"why"),lesson:g(r,"lesson"),source:g(r,"source")||"journal-export",notes:g(r,"notes")})}
     return {list:out,estComm:false,own:true};
   }
   const tradovate=c.bp>=0&&c.sp>=0&&c.bt>=0&&c.st>=0;
@@ -1445,7 +1492,7 @@ drop.addEventListener("drop",e=>handleFile(e.dataTransfer.files[0]));
 
 /* export */
 $("btn-export").addEventListener("click",async()=>{if(!downloads)return;
-  const cols=["id","account","date","time","exitTime","durSec","profitSec","lossSec","symbol","side","qty","entry","exit","stop","gross","commission","net","setup","setups","feelings","confidence","plan","grade","saw","why","lesson","notes","source"];
+  const cols=["id","account","date","time","exitTime","durSec","profitSec","lossSec","symbol","side","qty","entry","exit","stop","target","risk","rr","gross","commission","net","setup","setups","feelings","confidence","plan","grade","saw","why","lesson","notes","source"];
   const q=v=>{v=v==null?"":String(v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};
   const list=sortTrades(trades.filter(inScope));
   const csv=[cols.join(",")].concat(list.map(t=>cols.map(c=>q(c==="net"?net(t):c==="account"?accLabel(accById(accOf(t))):c==="feelings"?(t.feelings||[]).join("; "):c==="setups"?setupsOf(t).join("; "):t[c])).join(","))).join("\n");

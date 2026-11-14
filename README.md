@@ -7,6 +7,7 @@ is sent to a server.
   between them (Lucid, Apex, Tradeify, Topstep, Vest and others).
 - **A written journal for every trade**: what you saw, why you took it and how you felt,
   plus setups (custom setups and combinations) and screenshots.
+- **Risk : reward**: planned R:R and the result in R for each trade, worked out from entry, stop and target or typed in, with month and all-time averages.
 - **Time in the trade**: total time, time in profit and time in the red.
 - **Micro futures built in**: MNQ, MES, MYM, M2K, MGC and MCL, with commissions per contract.
 - **Trailing or static max loss limit**, an optional daily loss limit, and a profit target.

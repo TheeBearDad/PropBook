@@ -62,6 +62,15 @@ SETUPS
   never use, and save combinations you use often (one click picks all of
   their setups). "P&L by setup" shows each setup, or each combination.
 
+RISK : REWARD
+  Each trade has a Target price, a Risk ($) and a Planned risk : reward.
+  Fill in your entry, stop and target, and PropBook works out the risk and
+  the R:R for you. You can also type them yourself, for example 1:2 or just
+  2. Risk lets PropBook show each trade's result in R (net P&L divided by
+  the risk), so a $120 win on $40 of risk is +3R. The R column in the trade
+  list shows both. The "Avg R:R" and "Avg result" tiles show the month's
+  averages, plus your all-time average R:R.
+
 TIME IN THE TRADE
   Enter the entry and exit times and the time in trade fills in. Add how long
   the trade was in profit and how long it was in the red; the bar under the
