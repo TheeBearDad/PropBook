@@ -261,6 +261,65 @@ h4.group-title{margin:0}
   .ne-top{flex-wrap:wrap}.ne-top .ne-title{order:5;flex-basis:100%;font-size:21px}.ne-top #n-pin{margin-left:auto}
   .ne-body{min-height:55vh}
 }
+
+.vbadge{display:inline-block;min-width:8px;height:8px;border-radius:50%;background:var(--warn);margin-left:6px;vertical-align:2px}
+.nw-top{display:flex;gap:10px 16px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:12px}
+.nw-tabs label,.nw-tabs button{font-weight:600}
+.seg.nw-tabs{display:inline-flex;border:1px solid var(--line-2);border-radius:9px;padding:2px;background:var(--panel-2)}
+.seg.nw-tabs button{border:0;background:transparent;color:var(--muted);font:inherit;font-weight:600;font-size:13.5px;padding:6px 12px;border-radius:7px;cursor:pointer}
+.seg.nw-tabs button[aria-selected="true"]{background:var(--panel);color:var(--fg);box-shadow:0 0 0 1px var(--line-2)}
+.seg.nw-tabs button:focus-visible{outline:2px solid var(--focus)}
+.nw-links{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.nw-pane{padding:14px 16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.nw-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.nw-bar .grow{flex:1}
+.nw-in{background:var(--panel-2);border:1px solid var(--line-2);border-radius:8px;padding:6px 9px;font-size:13.5px;min-width:0}
+input.nw-in[type=search]{width:220px}
+.nw-in:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
+.nw-new{align-self:center;border:1px solid color-mix(in srgb,var(--warn) 60%,transparent);background:color-mix(in srgb,var(--warn) 14%,var(--panel));color:var(--fg);border-radius:999px;padding:5px 14px;font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+.nw-list{display:flex;flex-direction:column}
+.nw-day{font-family:var(--display);font-size:15px;font-weight:700;padding:14px 0 6px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);z-index:1}
+.nw-it{display:grid;grid-template-columns:64px minmax(0,1fr);gap:4px 12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.nw-it .t{font-family:var(--mono);font-size:12.5px;color:var(--muted);padding-top:2px}
+.nw-it .h{all:unset;cursor:pointer;font-weight:600;font-size:14.5px;line-height:1.4;color:var(--fg);overflow-wrap:anywhere}
+.nw-it .h:hover{text-decoration:underline}.nw-it .h:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:3px}
+.nw-it .m{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--faint)}
+.nw-it .s{font-size:13px;color:var(--muted);line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.nw-it.is-new .t::after{content:"NEW";display:block;margin-top:4px;font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--warn)}
+.srcb{border:1px solid var(--line-2);border-radius:5px;padding:0 6px;font-size:11px;font-weight:600;color:var(--muted);white-space:nowrap}
+.dchips{display:flex;gap:6px;flex-wrap:wrap;margin-top:2px}
+.dchip{font-family:var(--mono);font-size:12px;border:1px solid var(--line-2);border-radius:6px;padding:1px 7px;color:var(--muted)}
+.dchip b{font-weight:700}
+.up{color:var(--win)}.down{color:var(--loss)}.flat{color:var(--muted)}
+.dchip.up{border-color:color-mix(in srgb,var(--win) 55%,transparent);background:color-mix(in srgb,var(--win) 10%,transparent)}
+.dchip.down{border-color:color-mix(in srgb,var(--loss) 55%,transparent);background:color-mix(in srgb,var(--loss) 10%,transparent)}
+.nw-empty{padding:40px 10px;text-align:center;color:var(--muted)}
+.cal-legend{margin:0}
+.cal-next{border:1px solid var(--line-2);border-radius:9px;padding:9px 12px;background:var(--panel-2);font-size:13.5px}
+.cal-t{width:100%;border-collapse:collapse}
+.cal-t th{font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);text-align:left;padding:8px;border-bottom:1px solid var(--line)}
+.cal-t td{padding:8px;border-bottom:1px solid var(--line);font-size:13.5px;vertical-align:middle}
+.cal-t td.num,.cal-t th.num{text-align:right;font-family:var(--mono);white-space:nowrap}
+.cal-t tr.cday td{background:var(--panel-2);font-family:var(--display);font-weight:700;font-size:14px;padding:9px 8px}
+.cal-t tr.cday.today td{box-shadow:inset 3px 0 0 var(--win)}
+.cal-t tr.past td{opacity:.62}
+.cal-t tr.next td{background:color-mix(in srgb,var(--focus) 8%,transparent)}
+.cal-t .ev{font-weight:600}.cal-t .tm{font-family:var(--mono);white-space:nowrap;color:var(--muted)}
+.cal-t .arrow{font-size:11px;margin-left:4px}
+.fold{width:18px;height:15px;vertical-align:-2px}
+.fold path{stroke:rgba(0,0,0,.25);stroke-width:1}
+.f-high .fold path,.fold.f-high path{fill:#e5484d}.f-med .fold path{fill:#f76b15}.f-low .fold path{fill:#e2b203}.f-hol .fold path{fill:#8b968f}
+.fdot{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:0}.fdot.f-high{background:#e5484d}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.cal-tv{display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:12px}
+.tv-frame{border:1px solid var(--line);border-radius:9px;overflow:hidden;height:620px;background:var(--panel-2)}
+.tv-frame.tall{height:calc(100vh - 250px);min-height:480px}
+.tv-frame iframe{width:100%;height:100%;border:0;display:block}
+.src-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;max-height:52vh;overflow:auto}
+.src-list li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;padding:7px 4px;border-bottom:1px solid var(--line)}
+.src-list .nm{font-weight:600}.src-list .st{font-size:12px;color:var(--muted);overflow-wrap:anywhere}.src-list .st.bad{color:var(--loss)}
+.src-add{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap}.src-add .field{flex:1;min-width:160px}
+@media (max-width:700px){.nw-it{grid-template-columns:1fr}.nw-it .t{padding:0}.nw-it.is-new .t::after{display:inline;margin-left:8px}input.nw-in[type=search]{width:100%}.cal-t th:nth-child(7),.cal-t td:nth-child(7),.cal-t th:nth-child(3),.cal-t td:nth-child(3){display:none}.cal-t tr.cday td{display:table-cell}.cal-t td,.cal-t th{padding:7px 5px}.tv-frame.tall{height:70vh}}
+.linkish{all:unset;cursor:pointer;color:var(--loss);text-decoration:underline}.linkish:focus-visible{outline:2px solid var(--focus)}
 .kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:13px}.kv dt{color:var(--muted)}.kv dd{margin:0;min-width:0;overflow-wrap:anywhere}
 .auto-banner{display:flex;gap:12px;align-items:center;justify-content:space-between;border-radius:8px;padding:8px 8px 8px 14px;font-size:13.5px;border:1px solid}
 .auto-banner.ok{border-color:color-mix(in srgb,var(--win) 50%,transparent);background:color-mix(in srgb,var(--win) 10%,var(--panel))}
@@ -346,7 +405,7 @@ td.pt{color:color-mix(in srgb,var(--win) 75%,var(--muted))}td.lt{color:color-mix
     <div class="brand">
       <h1>PropBook</h1>
       <span class="chip" id="mode-chip">Loading</span>
-      <div class="views" role="tablist" aria-label="View"><button type="button" role="tab" id="v-journal" aria-selected="true" aria-controls="journal-view">Journal</button><button type="button" role="tab" id="v-notes" aria-selected="false" aria-controls="notes-view">Notes</button></div>
+      <div class="views" role="tablist" aria-label="View"><button type="button" role="tab" id="v-journal" aria-selected="true" aria-controls="journal-view">Journal</button><button type="button" role="tab" id="v-notes" aria-selected="false" aria-controls="notes-view" tabindex="-1">Notes</button><button type="button" role="tab" id="v-news" aria-selected="false" aria-controls="news-view" tabindex="-1">News<span class="vbadge" id="news-badge" hidden></span></button></div>
     </div>
     <div class="actions">
       <button class="btn icon" id="btn-theme" type="button" aria-label="Switch theme"></button>
@@ -454,6 +513,102 @@ td.pt{color:color-mix(in srgb,var(--win) 75%,var(--muted))}td.lt{color:color-mix
         </div>
       </section>
     </div>
+  </div>
+  <div id="news-view" role="tabpanel" aria-labelledby="v-news" hidden>
+    <div class="nw-top">
+      <div class="seg nw-tabs" role="tablist" aria-label="News sections">
+        <button type="button" role="tab" data-nt="head" aria-selected="true">Headlines</button>
+        <button type="button" role="tab" data-nt="cal" aria-selected="false" tabindex="-1">Red Folder</button>
+        <button type="button" role="tab" data-nt="chart" aria-selected="false" tabindex="-1">Charts</button>
+        <button type="button" role="tab" data-nt="heat" aria-selected="false" tabindex="-1">Heatmap</button>
+      </div>
+      <div class="nw-links" aria-label="Open a site in your browser"><span class="note">Open in browser:</span>
+        <button type="button" class="btn sm ghost" data-site="https://www.financialjuice.com/home">FinancialJuice</button>
+        <button type="button" class="btn sm ghost" data-site="https://www.forexfactory.com/calendar">ForexFactory</button>
+        <button type="button" class="btn sm ghost" data-site="https://unusualwhales.com/heatmaps?classic=1">Unusual Whales</button>
+        <button type="button" class="btn sm ghost" data-site="https://www.tradingview.com/chart/">TradingView</button>
+        <button type="button" class="btn sm ghost" data-site="https://www.marketwatch.com/">MarketWatch</button>
+        <button type="button" class="btn sm ghost" data-site="https://news.google.com/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx6TVdZU0FtVnVHZ0pWVXlnQVAB">Google News</button>
+      </div>
+    </div>
+    <div class="banner" id="nw-webonly" hidden>News, charts and the heatmap need the PropBook desktop app. It reads the news sites for you, which a plain web page isn't allowed to do.</div>
+
+    <section class="panel nw-pane" id="nt-head" aria-label="Headlines">
+      <div class="nw-bar">
+        <button class="btn primary sm" type="button" id="nw-refresh">Refresh</button>
+        <span class="note" id="nw-status" aria-live="polite"></span>
+        <span class="grow"></span>
+        <input type="search" class="nw-in" id="nw-q" placeholder="Search headlines" aria-label="Search headlines" autocomplete="off">
+        <select class="nw-in" id="nw-src" aria-label="Show source"><option value="">All sources</option></select>
+        <select class="nw-in" id="nw-auto" aria-label="Check for new headlines"><option value="0">Auto-check: off</option><option value="5">Every 5 min</option><option value="15">Every 15 min</option><option value="30">Every 30 min</option></select>
+        <button class="btn sm" type="button" id="nw-sources">Sources</button>
+      </div>
+      <button type="button" class="nw-new" id="nw-newpill" hidden></button>
+      <div class="nw-list" id="nw-list"></div>
+    </section>
+
+    <section class="panel nw-pane" id="nt-cal" aria-label="Red Folder calendar" hidden>
+      <div class="nw-bar">
+        <button class="btn primary sm" type="button" id="cal-refresh">Refresh</button>
+        <span class="note" id="cal-status" aria-live="polite"></span>
+        <span class="grow"></span>
+        <div class="seg" role="radiogroup" aria-label="Impact">
+          <input type="radio" name="cal-imp" id="ci-high" value="high"><label for="ci-high"><span class="fdot f-high"></span>Red</label>
+          <input type="radio" name="cal-imp" id="ci-med" value="med"><label for="ci-med">Red + orange</label>
+          <input type="radio" name="cal-imp" id="ci-all" value="all"><label for="ci-all">All</label>
+        </div>
+        <select class="nw-in" id="cal-cur" aria-label="Currency"><option value="USD">USD only</option><option value="">All currencies</option></select>
+        <select class="nw-in" id="cal-mode" aria-label="What the colors mean"><option value="stocks">Colors: stock futures</option><option value="usd">Colors: US dollar</option></select>
+      </div>
+      <p class="note cal-legend" id="cal-legend"></p>
+      <div class="cal-next" id="cal-next" hidden></div>
+      <div class="table-box"><table class="cal-t"><thead><tr><th>Time</th><th><span class="sr">Impact</span></th><th>Cur</th><th>Event</th><th class="num">Actual</th><th class="num">Forecast</th><th class="num">Previous</th></tr></thead><tbody id="cal-body"></tbody></table></div>
+      <div class="cal-tv">
+        <div><strong>Released numbers</strong><p class="note" style="margin:2px 0 0">ForexFactory's free weekly file has the schedule, forecasts and previous values, but not the actual numbers. TradingView's calendar shows the actual numbers as they're released.</p></div>
+        <button class="btn sm" type="button" id="cal-tv-btn" aria-expanded="false">Show TradingView calendar</button>
+      </div>
+      <div class="tv-frame" id="cal-tv" hidden></div>
+    </section>
+
+    <section class="panel nw-pane" id="nt-chart" aria-label="Charts" hidden>
+      <div class="nw-bar">
+        <select class="nw-in" id="ch-sym" aria-label="Symbol">
+          <optgroup label="Futures"><option value="CME_MINI:NQ1!">Nasdaq 100 (NQ / MNQ)</option><option value="CME_MINI:ES1!">S&amp;P 500 (ES / MES)</option><option value="CBOT_MINI:YM1!">Dow (YM / MYM)</option><option value="CME_MINI:RTY1!">Russell 2000 (RTY / M2K)</option><option value="COMEX:GC1!">Gold (GC / MGC)</option><option value="NYMEX:CL1!">Crude oil (CL / MCL)</option></optgroup>
+          <optgroup label="Markets"><option value="TVC:DXY">US dollar index</option><option value="TVC:VIX">VIX</option><option value="TVC:US10Y">US 10-year yield</option><option value="NASDAQ:QQQ">QQQ</option><option value="AMEX:SPY">SPY</option><option value="BITSTAMP:BTCUSD">Bitcoin</option></optgroup>
+          <option value="__custom">Other symbol…</option>
+        </select>
+        <input class="nw-in" id="ch-custom" placeholder="e.g. NASDAQ:NVDA" aria-label="TradingView symbol" hidden autocomplete="off" spellcheck="false">
+        <select class="nw-in" id="ch-int" aria-label="Interval"><option value="1">1 min</option><option value="5">5 min</option><option value="15" selected>15 min</option><option value="60">1 hour</option><option value="240">4 hours</option><option value="D">1 day</option><option value="W">1 week</option></select>
+        <span class="grow"></span>
+        <button class="btn sm ghost" type="button" id="ch-open">Open in TradingView</button>
+      </div>
+      <div class="tv-frame tall" id="ch-frame"></div>
+      <p class="note" style="margin:0">Charts are TradingView's free embedded chart. Futures prices in it can be delayed. If a symbol won't load here, use <b>Open in TradingView</b>.</p>
+    </section>
+
+    <section class="panel nw-pane" id="nt-heat" aria-label="Heatmap" hidden>
+      <div class="nw-bar">
+        <select class="nw-in" id="hm-src" aria-label="Index"><option value="SPX500">S&amp;P 500</option><option value="NASDAQ100">Nasdaq 100</option><option value="DJDJI">Dow 30</option><option value="AllUSA">All US stocks</option></select>
+        <span class="grow"></span>
+        <button class="btn sm ghost" type="button" data-site="https://unusualwhales.com/heatmaps?classic=1">Open Unusual Whales heatmap</button>
+      </div>
+      <div class="tv-frame tall" id="hm-frame"></div>
+    </section>
+  </div>
+</div>
+
+<!-- News sources -->
+<div class="overlay" id="ov-src" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="src-title">
+    <div class="sheet-head"><h3 id="src-title">News sources</h3><button class="x" type="button" data-close aria-label="Close">×</button></div>
+    <p class="note" style="margin:0">PropBook reads the public news feeds (RSS) these sites publish. Untick a source to hide it, or add any site's RSS feed address.</p>
+    <ul class="src-list" id="src-list"></ul>
+    <form class="src-add" id="src-add" novalidate>
+      <div class="field"><label for="src-name">Name</label><input id="src-name" placeholder="e.g. Seeking Alpha" maxlength="40" autocomplete="off"></div>
+      <div class="field" style="flex:2"><label for="src-url">Feed address</label><input id="src-url" type="url" placeholder="https://…/rss" autocomplete="off" spellcheck="false"></div>
+      <button class="btn" type="submit">Add</button>
+    </form>
+    <div class="foot"><span></span><div class="r"><button class="btn primary" type="button" data-close>Done</button></div></div>
   </div>
 </div>
 
@@ -738,6 +893,8 @@ function mergeSettings(s){
     combos:Array.isArray(su.combos)?su.combos.filter(c=>c&&Array.isArray(c.parts)&&c.parts.length>1):[]};
   o.ignored=Array.isArray(s.ignored)?s.ignored:[];
   const up=s.updates||{};o.updates={auto:!!up.auto,skip:typeof up.skip==="string"?up.skip:""};
+  const nw=s.news||{};o.news={off:Array.isArray(nw.off)?nw.off:defaultOffFeeds(),custom:Array.isArray(nw.custom)?nw.custom.filter(f=>f&&f.url):[],
+    auto:[0,5,15,30].includes(+nw.auto)?+nw.auto:0,mode:nw.mode==="usd"?"usd":"stocks",impact:["high","med","all"].includes(nw.impact)?nw.impact:"high",cur:typeof nw.cur==="string"?nw.cur:"USD"};
   return o;
 }
 function accounts(){return settings.accounts}
@@ -780,13 +937,13 @@ async function init(){
   if(DESK){
     try{const d=await (await api("/api/data")).json();trades=d.trades||[];days=d.days||{};settings=mergeSettings(d.settings);
       ext=d.ext||{};if(d.lucid&&!d.ext)ext[accounts()[0].id]=Object.assign({account:null,days:{},rows:{}},d.lucid);
-      detected=d.detected||{};notes=Array.isArray(d.notes)?d.notes.filter(n=>n&&n.id):[];if(d.ui&&d.ui.view==="notes")setView("notes",true);if(d.ui&&d.ui.theme){themePref=d.ui.theme;applyTheme()}activeAcc=(d.ui&&d.ui.activeAcc)||"all";checkActive();migratePlaceholders();
+      detected=d.detected||{};notes=Array.isArray(d.notes)?d.notes.filter(n=>n&&n.id):[];if(d.ui&&d.ui.view&&d.ui.view!=="journal")setView(d.ui.view,true);if(d.ui&&d.ui.theme){themePref=d.ui.theme;applyTheme()}activeAcc=(d.ui&&d.ui.activeAcc)||"all";checkActive();migratePlaceholders();
       const fixes=repairAccounts();adoptSetups();if(fixes.length){persist();fixes.forEach(f=>showMsg(true,f))}}catch(e){toast("Couldn't read your journal file. Restart the app.")}
     mode="desktop";
     assets={upload:async f=>{const r=await (await api("/api/shot?name="+encodeURIComponent(f.name||"chart.png"),{method:"POST",body:f})).json();return {id:r.id,url:"/shots/"+r.id}}};
     downloads={save:async o=>{const r=await (await api("/api/export?name="+encodeURIComponent(o.filename),{method:"POST",body:o.data})).json();toast("Saved to "+r.path)}};
     $("shot-field").hidden=false;$("btn-export").hidden=false;$("btn-folder").hidden=false;$("btn-inbox").hidden=false;$("imp-desk").hidden=false;
-    syncFolders();setInterval(checkInbox,3000);checkInbox();startUpdates();
+    syncFolders();setInterval(checkInbox,3000);checkInbox();startUpdates();scheduleNews();
     addEventListener("pagehide",()=>{try{navigator.sendBeacon("/api/bye?t="+DESK.token)}catch(e){}});
     render();return;
   }
@@ -807,7 +964,7 @@ async function init(){
   }
   mode="local";const saved=lsGet();
   if(saved){trades=saved.trades||[];days=saved.days||{};settings=mergeSettings(saved.settings);notes=Array.isArray(saved.notes)?saved.notes:[];adoptSetups()}
-  try{if(localStorage.getItem("mfj.view")==="notes")setView("notes",true)}catch(e){}
+  try{const v=localStorage.getItem("mfj.view");if(v&&v!=="journal")setView(v,true)}catch(e){}
   checkActive();$("local-banner").hidden=false;render();
 }
 
@@ -1265,16 +1422,19 @@ function fillAccountForm(id){
 let curView="journal",curNote=null,noteT=0,noteDirty=false;
 const NOTE_COLORS=[["Default",""],["Red","#e5484d"],["Orange","#f76b15"],["Yellow","#d6a400"],["Green","#30a46c"],["Blue","#3e8ef7"],["Purple","#9a5ce6"]];
 const NOTE_HL=[["None",""],["Yellow","rgba(255,213,0,.38)"],["Green","rgba(48,164,108,.32)"],["Blue","rgba(62,142,247,.30)"],["Pink","rgba(229,72,140,.30)"]];
+const VIEWS=["journal","notes","news"];
 function setView(v,quiet){
-  if(v===curView&&!quiet)return;if(curView==="notes"&&v!=="notes")flushNote();
-  curView=v;const n=v==="notes";$("journal-view").hidden=n;$("notes-view").hidden=!n;
-  $("v-journal").setAttribute("aria-selected",String(!n));$("v-notes").setAttribute("aria-selected",String(n));
-  $("btn-new").hidden=n;
-  if(n){renderNoteList();if(!curNote){const first=sortedNotes()[0];if(first&&innerWidth>820)openNote(first.id)}else showNote()}
+  if(!VIEWS.includes(v))v="journal";
+  if(v===curView&&!quiet)return;if(curView==="notes"&&v!=="notes"){flushNote();dropIfEmpty()}
+  curView=v;VIEWS.forEach(k=>{$(k+"-view").hidden=k!==v;$("v-"+k).setAttribute("aria-selected",String(k===v));$("v-"+k).tabIndex=k===v?0:-1});
+  $("btn-new").hidden=v!=="journal";
+  if(v==="notes"){renderNoteList();if(!curNote){const first=sortedNotes()[0];if(first&&innerWidth>820)openNote(first.id)}else showNote()}
+  if(v==="news")openNews();
   if(!quiet){try{localStorage.setItem("mfj.view",v)}catch(e){}if(DESK)persist()}
 }
-$("v-journal").addEventListener("click",()=>setView("journal"));$("v-notes").addEventListener("click",()=>setView("notes"));
-$("v-journal").parentElement.addEventListener("keydown",e=>{if(e.key==="ArrowRight"||e.key==="ArrowLeft"){const o=curView==="notes"?"journal":"notes";setView(o);$("v-"+o).focus();e.preventDefault()}});
+VIEWS.forEach(k=>$("v-"+k).addEventListener("click",()=>setView(k)));
+$("v-journal").parentElement.addEventListener("keydown",e=>{if(e.key!=="ArrowRight"&&e.key!=="ArrowLeft")return;e.preventDefault();
+  const i=VIEWS.indexOf(curView),o=VIEWS[(i+(e.key==="ArrowRight"?1:VIEWS.length-1))%VIEWS.length];setView(o);$("v-"+o).focus()});
 const ALLOWED={B:1,STRONG:1,I:1,EM:1,U:1,S:1,STRIKE:1,DEL:1,MARK:1,H2:1,H3:1,P:1,DIV:1,BR:1,UL:1,OL:1,LI:1,BLOCKQUOTE:1,HR:1,A:1,SPAN:1,FONT:1};
 const RENAME={H1:"H2",H4:"H3",H5:"H3",H6:"H3",PRE:"P",SECTION:"DIV",ARTICLE:"DIV",HEADER:"DIV",FOOTER:"DIV",TABLE:"DIV",TR:"DIV",TD:"SPAN",TH:"SPAN",CODE:"SPAN"};
 function cleanColor(v){v=String(v||"").trim().toLowerCase();return /^(#[0-9a-f]{3,8}|rgba?\([\d.,\s%]+\))$/.test(v)?v:""}
@@ -1430,6 +1590,204 @@ $("n-body").addEventListener("drop",e=>{if(e.dataTransfer&&e.dataTransfer.files&
 $("n-body").addEventListener("click",e=>{const a=e.target.closest("a[href]");if(a&&(e.ctrlKey||e.metaKey)){e.preventDefault();window.open(a.href,"_blank","noopener")}});
 window.addEventListener("beforeunload",()=>flushNote());
 document.addEventListener("keydown",e=>{if(curView==="notes"&&(e.ctrlKey||e.metaKey)&&e.altKey&&e.key.toLowerCase()==="n"){e.preventDefault();newNote()}});
+
+/* ---------- news ----------
+   Headlines come from public RSS feeds the app fetches; Red Folder from ForexFactory's weekly calendar file;
+   charts and the heatmap are TradingView's embeddable widgets, served from a separate local address. */
+const FEEDS=[
+  {id:"fj",name:"FinancialJuice",url:"https://www.financialjuice.com/feed.ashx?xy=rss"},
+  {id:"mw",name:"MarketWatch",url:"https://feeds.content.dowjones.io/public/rss/mw_topstories"},
+  {id:"mwb",name:"MarketWatch bulletins",url:"https://feeds.content.dowjones.io/public/rss/mw_bulletins"},
+  {id:"cnbc",name:"CNBC",url:"https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=100003114"},
+  {id:"cnbce",name:"CNBC economy",url:"https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=20910258"},
+  {id:"yf",name:"Yahoo Finance",url:"https://finance.yahoo.com/news/rssindex"},
+  {id:"gn",name:"Google News: markets",url:"https://news.google.com/rss/search?q=%22stock+market%22+OR+%22stock+futures%22+OR+%22Federal+Reserve%22+when:7d&hl=en-US&gl=US&ceid=US:en"},
+  {id:"inv",name:"Investing.com",url:"https://www.investing.com/rss/news_25.rss"},
+  {id:"invec",name:"Investing.com: economy",url:"https://www.investing.com/rss/news_95.rss"},
+  {id:"fed",name:"Federal Reserve",url:"https://www.federalreserve.gov/feeds/press_all.xml"},
+  {id:"sa",name:"Seeking Alpha: market news",url:"https://seekingalpha.com/market_currents.xml"},
+  {id:"fxs",name:"FXStreet",url:"https://www.fxstreet.com/rss/news"},
+];
+function defaultOffFeeds(){return ["mwb","cnbce","invec","sa","fxs"]} // a function so settings can use it before this part of the page runs
+let newsChecked=false,newsItems=[],newsFeedStatus={},newsAt=0,newsBusy=false,newsTimer=0,newsTab="head",newsInfo=null,newsLoaded=false,cal=null,calBusy=false;
+function allFeeds(){return FEEDS.concat(settings.news.custom.map(f=>({id:f.id,name:f.name,url:f.url,custom:true})))}
+function activeFeeds(){return allFeeds().filter(f=>!settings.news.off.includes(f.id))}
+function feedName(id){const f=allFeeds().find(x=>x.id===id);return f?f.name:"News"}
+function seenAt(){try{return +localStorage.getItem("pb.news.seen")||0}catch(e){return 0}}
+function setSeen(t){try{localStorage.setItem("pb.news.seen",String(t))}catch(e){}}
+function openSite(u){if(DESK)api("/api/openurl?u="+encodeURIComponent(u)).catch(()=>toast("Couldn't open the browser."));else window.open(u,"_blank","noopener")}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-site]");if(b){e.preventDefault();openSite(b.dataset.site)}});
+function ago(ms){const s=(Date.now()-ms)/1000;return s<60?"just now":s<3600?Math.round(s/60)+" min ago":s<86400?Math.round(s/3600)+" h ago":Math.round(s/86400)+" days ago"}
+
+async function openNews(){
+  $("nw-webonly").hidden=DESK;
+  if(!newsLoaded){newsLoaded=true;
+    $("nw-auto").value=String(settings.news.auto);$("cal-mode").value=settings.news.mode;$("ci-"+settings.news.impact).checked=true;$("cal-cur").value=settings.news.cur;
+    try{const v=localStorage.getItem("pb.news.tab");if(v)newsTab=v}catch(e){}
+    if(DESK){try{newsInfo=await (await api("/api/news/info")).json()}catch(e){}
+      try{const c=await (await api("/api/news/cached")).json();if(c.items&&c.items.length&&!newsItems.length){newsItems=c.items;newsAt=c.savedAt||0}}catch(e){}}
+  }
+  showNewsTab(newsTab);
+  $("news-badge").hidden=true;
+}
+function showNewsTab(t){newsTab=t;try{localStorage.setItem("pb.news.tab",t)}catch(e){}
+  document.querySelectorAll(".nw-tabs [data-nt]").forEach(b=>{const on=b.dataset.nt===t;b.setAttribute("aria-selected",String(on));b.tabIndex=on?0:-1});
+  ["head","cal","chart","heat"].forEach(k=>$("nt-"+k).hidden=k!==t);
+  if(!DESK)return;
+  if(t==="head"){renderNews();if(!newsChecked||Date.now()-newsAt>3*60000){newsChecked=true;loadNews(false)}}
+  if(t==="cal"){if(!cal)loadCal(false);else renderCal()}
+  if(t==="chart")loadChart();
+  if(t==="heat")loadHeat();
+}
+document.querySelector(".nw-tabs").addEventListener("click",e=>{const b=e.target.closest("[data-nt]");if(b)showNewsTab(b.dataset.nt)});
+document.querySelector(".nw-tabs").addEventListener("keydown",e=>{if(e.key!=="ArrowRight"&&e.key!=="ArrowLeft")return;e.preventDefault();const k=["head","cal","chart","heat"],i=k.indexOf(newsTab),o=k[(i+(e.key==="ArrowRight"?1:3))%4];showNewsTab(o);document.querySelector('.nw-tabs [data-nt="'+o+'"]').focus()});
+
+async function loadNews(force,quiet){
+  if(!DESK||newsBusy)return;newsBusy=true;$("nw-refresh").disabled=true;if(!quiet)$("nw-status").textContent="Checking "+activeFeeds().length+" sources…";
+  try{
+    const r=await api("/api/news",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({feeds:activeFeeds().map(f=>({id:f.id,url:f.url})),refresh:!!force})});
+    const d=await r.json();const before=new Set(newsItems.map(i=>i.id));
+    newsItems=d.items||[];newsFeedStatus=d.feeds||{};newsAt=d.fetchedAt||Date.now();
+    const fresh=newsItems.filter(i=>!before.has(i.id)).length;
+    if(quiet&&fresh&&before.size){if(curView!=="news"||newsTab!=="head")$("news-badge").hidden=false}
+  }catch(e){$("nw-status").textContent="Couldn't load the news. Restart PropBook and try again.";newsBusy=false;$("nw-refresh").disabled=false;return}
+  newsBusy=false;$("nw-refresh").disabled=false;if(!quiet)markSeenIfFirst();renderNews();if(!$("ov-src").hidden)renderSources();
+}
+$("nw-refresh").addEventListener("click",()=>loadNews(true));
+function scheduleNews(){clearInterval(newsTimer);const m=settings.news.auto;if(m&&DESK)newsTimer=setInterval(()=>loadNews(false,true),m*60000)}
+$("nw-auto").addEventListener("change",e=>{settings.news.auto=+e.target.value;Store.saveSettings().catch(()=>{});scheduleNews();toast(settings.news.auto?"PropBook will check for new headlines every "+settings.news.auto+" minutes while it's open.":"Auto-check is off. Use Refresh when you want new headlines.")});
+$("nw-q").addEventListener("input",()=>renderNews());$("nw-src").addEventListener("change",()=>renderNews());
+
+/* "Actual 0.4% (Forecast 0.3%, Previous 0.2%)" in a headline (FinancialJuice style) */
+const DATA_RE=/\bActual:?\s*([-+]?[\d.,]+\s*[%KMBT]?)\s*(?:\(|,|\s)\s*(?:Forecast|Consensus|Expected|Est\.?):?\s*([-+]?[\d.,]+\s*[%KMBT]?)(?:\s*,\s*Previous:?\s*([-+]?[\d.,]+\s*[%KMBT]?))?\)?/i;
+function numVal(v){if(v==null)return null;v=String(v).replace(/,/g,"").replace(/[<>]/g,"").trim();const m=v.match(/^([-+]?\d*\.?\d+)\s*(%|K|M|B|T)?$/i);if(!m)return null;const mult={K:1e3,M:1e6,B:1e9,T:1e12}[(m[2]||"").toUpperCase()]||1;return +m[1]*mult}
+/* Does a higher number help or hurt? Returns +1 (higher is good), -1 (higher is bad) or 0 (no clear read). */
+function directionFor(title,mode){
+  const t=title||"";
+  if(mode==="usd"){if(/unemployment|jobless|claims|claimant|job cuts|crude oil inventories|natural gas storage/i.test(t))return -1;return 1}
+  if(/\b(CPI|PPI|PCE|inflation|price index|prices paid|average hourly earnings|employment cost|import prices|export prices|unit labor costs?)\b/i.test(t))return -1;
+  if(/rate decision|interest rate|federal funds|fed funds/i.test(t))return -1;
+  if(/unemployment|jobless|claims|claimant|job cuts/i.test(t))return -1;
+  if(/inventories|storage|speaks|speech|minutes|statement|press conference|auction|holiday/i.test(t))return 0;
+  return 1}
+function surprise(actual,forecast,previous,title,mode){
+  const a=numVal(actual),f=numVal(forecast),p=numVal(previous);const ref=f!=null?f:p;
+  if(a==null||ref==null)return {cls:"",word:""};
+  if(a===ref)return {cls:"flat",word:"as expected"};
+  const higher=a>ref,dir=directionFor(title,mode);
+  const word=(higher?"above ":"below ")+(f!=null?"forecast":"previous");
+  if(!dir)return {cls:"flat",word};
+  return {cls:(higher===(dir>0))?"up":"down",word}}
+function dataChips(title){const m=title.match(DATA_RE);if(!m)return "";const s=surprise(m[1],m[2],m[3],title,settings.news.mode);
+  return '<div class="dchips"><span class="dchip '+s.cls+'" title="'+esc(s.word)+'">Actual <b>'+esc(m[1])+'</b>'+(s.word?' · '+esc(s.word):'')+'</span><span class="dchip">Forecast '+esc(m[2])+'</span>'+(m[3]?'<span class="dchip">Previous '+esc(m[3])+'</span>':'')+'</div>'}
+function dayLabel(ms){const d=new Date(ms),t=new Date();const k=x=>x.toDateString();const y=new Date(t);y.setDate(t.getDate()-1);
+  if(k(d)===k(t))return "Today";if(k(d)===k(y))return "Yesterday";return d.toLocaleDateString("en-US",{weekday:"long",month:"short",day:"numeric"})}
+function renderNews(){
+  const srcSel=$("nw-src"),cur=srcSel.value;const ids=[...new Set(newsItems.map(i=>i.feed))];
+  srcSel.innerHTML='<option value="">All sources</option>'+activeFeeds().filter(f=>ids.includes(f.id)).map(f=>'<option value="'+esc(f.id)+'">'+esc(f.name)+'</option>').join("");srcSel.value=ids.includes(cur)?cur:"";
+  const q=N($("nw-q").value||""),src=srcSel.value,seen=seenAt();
+  const list=newsItems.filter(i=>(!src||i.feed===src)&&(!q||N(i.title+" "+(i.summary||"")+" "+feedName(i.feed)).includes(q)));
+  const bad=Object.entries(newsFeedStatus).filter(([id,v])=>v.error&&activeFeeds().some(f=>f.id===id));
+  $("nw-status").innerHTML=newsAt?("Updated "+esc(ago(newsAt))+" · "+newsItems.length+" headlines"+(bad.length?' · <button type="button" class="linkish" id="nw-bad">'+bad.length+" source"+(bad.length===1?"":"s")+" didn't load</button>":"")):"";
+  const nb=$("nw-bad");if(nb)nb.onclick=()=>openSources();
+  const fresh=seen?list.filter(i=>i.time>seen).length:0;
+  $("nw-newpill").hidden=!fresh;$("nw-newpill").textContent=fresh+" new since you last looked · mark as read";
+  if(!list.length){$("nw-list").innerHTML='<div class="nw-empty">'+(newsBusy||(!newsAt&&DESK)?"Loading headlines…":q||src?"No headlines match.":"No headlines yet. Press Refresh.")+'</div>';return}
+  let html="",last="";
+  list.slice(0,400).forEach(i=>{const lab=i.time?dayLabel(i.time):"Undated";if(lab!==last){html+='<div class="nw-day">'+esc(lab)+'</div>';last=lab}
+    const tm=i.time?new Date(i.time).toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"}):"";
+    html+='<article class="nw-it'+(seen&&i.time>seen?' is-new':'')+'"><span class="t">'+esc(tm)+'</span><div style="display:flex;flex-direction:column;gap:3px;min-width:0">'+
+      '<button type="button" class="h" data-site="'+esc(i.link)+'" title="Open in your browser">'+esc(i.title)+'</button>'+dataChips(i.title)+
+      (i.summary?'<span class="s">'+esc(i.summary)+'</span>':'')+
+      '<span class="m"><span class="srcb">'+esc(feedName(i.feed))+'</span>'+(i.source&&i.source!==feedName(i.feed)?esc(i.source):'')+'</span></div></article>'});
+  $("nw-list").innerHTML=html;
+}
+$("nw-newpill").addEventListener("click",()=>{setSeen(newsItems.reduce((m,i)=>Math.max(m,i.time||0),0));renderNews()});
+// the first time you open headlines, everything counts as read
+function markSeenIfFirst(){if(!seenAt()&&newsItems.length)setSeen(newsItems.reduce((m,i)=>Math.max(m,i.time||0),0))}
+
+/* sources dialog */
+function openSources(){renderSources();openOv("ov-src")}
+$("nw-sources").addEventListener("click",openSources);
+function renderSources(){
+  $("src-list").innerHTML=allFeeds().map(f=>{const st=newsFeedStatus[f.id],on=!settings.news.off.includes(f.id);
+    const line=!on?"Hidden":st?(st.error?"Didn't load: "+st.error:st.count+" headlines"):"Not checked yet";
+    return '<li><input type="checkbox" id="sf-'+esc(f.id)+'" data-feed="'+esc(f.id)+'"'+(on?" checked":"")+'><label for="sf-'+esc(f.id)+'" style="min-width:0"><span class="nm">'+esc(f.name)+'</span><br><span class="st'+(on&&st&&st.error?" bad":"")+'">'+esc(line)+'</span></label>'+
+      (f.custom?'<button type="button" class="btn sm ghost danger" data-delfeed="'+esc(f.id)+'">Remove</button>':'<span></span>')+'</li>'}).join("")}
+$("src-list").addEventListener("change",e=>{const c=e.target.closest("[data-feed]");if(!c)return;const id=c.dataset.feed;
+  settings.news.off=settings.news.off.filter(x=>x!==id);if(!c.checked)settings.news.off.push(id);Store.saveSettings().catch(()=>{});renderSources();newsDirty=true});
+$("src-list").addEventListener("click",e=>{const b=e.target.closest("[data-delfeed]");if(!b)return;settings.news.custom=settings.news.custom.filter(f=>f.id!==b.dataset.delfeed);Store.saveSettings().catch(()=>{});renderSources();newsDirty=true});
+let newsDirty=false;
+$("src-add").addEventListener("submit",e=>{e.preventDefault();const name=$("src-name").value.trim(),url=$("src-url").value.trim();
+  if(!/^https?:\/\/[^\s]+\.[^\s]+/i.test(url)){toast("Paste the feed's full address, starting with https://");$("src-url").focus();return}
+  if(allFeeds().some(f=>f.url===url)){toast("That feed is already in the list.");return}
+  settings.news.custom.push({id:"c"+Date.now().toString(36),name:name||new URL(url).hostname.replace(/^www\./,""),url});
+  Store.saveSettings().catch(()=>{});$("src-name").value="";$("src-url").value="";renderSources();newsDirty=true;toast("Added. It's checked the next time headlines refresh.")});
+document.querySelectorAll('#ov-src [data-close]').forEach(b=>b.addEventListener("click",()=>{if(newsDirty){newsDirty=false;loadNews(true)}}));
+
+/* Red Folder */
+async function loadCal(force){
+  if(!DESK||calBusy)return;calBusy=true;$("cal-refresh").disabled=true;$("cal-status").textContent="Loading the calendar…";
+  try{cal=await (await api("/api/calendar"+(force?"?refresh=1":""))).json()}catch(e){cal={events:[],error:"Couldn't load the calendar. Restart PropBook and try again."}}
+  calBusy=false;$("cal-refresh").disabled=false;renderCal();if(cal.note)toast(cal.note);
+}
+$("cal-refresh").addEventListener("click",()=>loadCal(true));
+document.querySelectorAll('input[name=cal-imp]').forEach(r=>r.addEventListener("change",()=>{settings.news.impact=r.value;Store.saveSettings().catch(()=>{});renderCal()}));
+$("cal-cur").addEventListener("change",e=>{settings.news.cur=e.target.value;Store.saveSettings().catch(()=>{});renderCal()});
+$("cal-mode").addEventListener("change",e=>{settings.news.mode=e.target.value;Store.saveSettings().catch(()=>{});renderCal();renderNews()});
+const IMP={High:"high",Medium:"med",Low:"low",Holiday:"hol"};
+function folder(imp){const k=IMP[imp]||"low";return '<span class="f-'+k+'" title="'+esc((imp||"Low")+" impact")+'"><svg viewBox="0 0 20 16" aria-hidden="true" class="fold"><path d="M1 3a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2z"/></svg><span class="sr">'+esc((imp||"Low")+" impact")+'</span></span>'}
+function renderCal(){
+  const mode=settings.news.mode;
+  $("cal-legend").innerHTML=mode==="stocks"
+    ?'<span class="up">Green</span> = a result that usually helps stock index futures (NQ, ES), <span class="down">red</span> = one that usually hurts them. As a rule of thumb, hotter inflation, higher rates and more jobless claims are read as bad for stocks, and stronger growth data as good. It\'s a guide, not a prediction.'
+    :'<span class="up">Green</span> = better than forecast for the currency, <span class="down">red</span> = worse, the same way ForexFactory colors it. For stock futures that can be the opposite: hot US inflation shows green here.';
+  if(!cal){$("cal-body").innerHTML="";return}
+  const imp=settings.news.impact,cur=settings.news.cur;
+  const keep=e=>(!cur||e.country===cur)&&(imp==="all"||e.impact==="High"||(imp==="med"&&e.impact==="Medium"));
+  const ev=(cal.events||[]).map(e=>Object.assign({},e,{ts:Date.parse(e.date)})).filter(e=>!isNaN(e.ts)&&keep(e)).sort((a,b)=>a.ts-b.ts);
+  const now=Date.now(),next=ev.find(e=>e.ts>now&&e.impact!=="Holiday");
+  $("cal-status").textContent=cal.error?(cal.events&&cal.events.length?"Showing the copy from "+new Date(cal.at).toLocaleString("en-US",{weekday:"short",hour:"numeric",minute:"2-digit"})+". "+cal.error+".":cal.error+"."):cal.at?"Updated "+ago(cal.at)+" · ForexFactory":"";
+  if(next){const mins=Math.round((next.ts-now)/60000),h=Math.floor(mins/60),d=Math.floor(h/24);
+    $("cal-next").hidden=false;$("cal-next").innerHTML='Next: '+folder(next.impact)+' <b>'+esc(next.country)+' '+esc(next.title)+'</b> · '+esc(new Date(next.ts).toLocaleString("en-US",{weekday:"short",hour:"numeric",minute:"2-digit"}))+' · in '+(d?d+"d "+(h%24)+"h":h?h+"h "+(mins%60)+"m":mins+" min")+(next.forecast?' · forecast <b class="num">'+esc(next.forecast)+'</b>':'')}
+  else $("cal-next").hidden=true;
+  if(!ev.length){$("cal-body").innerHTML='<tr><td colspan="7" class="nw-empty">'+(cal.events&&cal.events.length?"Nothing matches these filters this week.":"No calendar yet. Press Refresh.")+'</td></tr>';return}
+  let html="",last="";const today=new Date().toDateString();
+  ev.forEach(e=>{const d=new Date(e.ts),dk=d.toDateString();
+    if(dk!==last){last=dk;html+='<tr class="cday'+(dk===today?' today':'')+'"><td colspan="7">'+esc(d.toLocaleDateString("en-US",{weekday:"long",month:"short",day:"numeric"}))+(dk===today?' · Today':'')+'</td></tr>'}
+    const allDay=e.impact==="Holiday"||(d.getHours()===0&&d.getMinutes()===0&&/holiday|tentative/i.test(e.title+" "+(e.time||"")));
+    const tm=allDay?"All day":d.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"});
+    const s=e.actual?surprise(e.actual,e.forecast,e.previous,e.title,mode):{cls:"",word:""};
+    // before the release, show which way the forecast leans versus last time
+    let lean="";const fv=numVal(e.forecast),pv=numVal(e.previous);
+    if(!e.actual&&fv!=null&&pv!=null&&fv!==pv){const dir=directionFor(e.title,mode),up=fv>pv;const c=!dir?"flat":(up===(dir>0))?"up":"down";lean='<span class="arrow '+c+'" title="Forecast is '+(up?"above":"below")+' the previous reading">'+(up?"▲":"▼")+'</span>'}
+    html+='<tr class="'+(e.ts<now?'past':'')+(next&&e===next?' next':'')+'"><td class="tm">'+esc(tm)+'</td><td>'+folder(e.impact)+'</td><td>'+esc(e.country)+'</td><td class="ev">'+esc(e.title)+'</td>'+
+      '<td class="num '+s.cls+'"'+(s.word?' title="'+esc(s.word)+'"':'')+'>'+(e.actual?'<b>'+esc(e.actual)+'</b>':e.ts<now&&e.impact!=="Holiday"?'<span class="note">see TradingView</span>':'')+'</td>'+
+      '<td class="num">'+esc(e.forecast||"")+lean+'</td><td class="num">'+esc(e.previous||"")+'</td></tr>'});
+  $("cal-body").innerHTML=html;
+}
+$("cal-tv-btn").addEventListener("click",()=>{const box=$("cal-tv"),open=box.hidden;box.hidden=!open;$("cal-tv-btn").setAttribute("aria-expanded",String(open));$("cal-tv-btn").textContent=open?"Hide TradingView calendar":"Show TradingView calendar";
+  if(open)setFrame("cal-tv",{w:"calendar",high:settings.news.impact==="high"?"1":"0"})});
+
+/* TradingView widgets */
+function tvTheme(){return document.documentElement.dataset.theme==="light"||(document.documentElement.dataset.theme!=="dark"&&matchMedia("(prefers-color-scheme: light)").matches)?"light":"dark"}
+function setFrame(id,params){if(!newsInfo||!newsInfo.widgetBase){$(id).innerHTML='<div class="nw-empty">The chart service didn\'t start. Restart PropBook.</div>';return}
+  const src=newsInfo.widgetBase+"/tv?"+new URLSearchParams(Object.assign({theme:tvTheme()},params)).toString();
+  const f=$(id).querySelector("iframe");if(f&&f.dataset.src===src)return;
+  $(id).innerHTML='<iframe title="TradingView '+esc(params.w)+'" loading="lazy" referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox" src="'+esc(src)+'" data-src="'+esc(src)+'"></iframe>'}
+function chartSym(){const v=$("ch-sym").value;return v==="__custom"?($("ch-custom").value.trim().toUpperCase()||"CME_MINI:NQ1!"):v}
+function loadChart(){try{const s=localStorage.getItem("pb.chart.sym"),i=localStorage.getItem("pb.chart.int");
+  if(s){if([...$("ch-sym").options].some(o=>o.value===s))$("ch-sym").value=s;else{$("ch-sym").value="__custom";$("ch-custom").value=s}}if(i)$("ch-int").value=i}catch(e){}
+  $("ch-custom").hidden=$("ch-sym").value!=="__custom";setFrame("ch-frame",{w:"chart",symbol:chartSym(),interval:$("ch-int").value})}
+function saveChart(){try{localStorage.setItem("pb.chart.sym",chartSym());localStorage.setItem("pb.chart.int",$("ch-int").value)}catch(e){}setFrame("ch-frame",{w:"chart",symbol:chartSym(),interval:$("ch-int").value})}
+$("ch-sym").addEventListener("change",()=>{$("ch-custom").hidden=$("ch-sym").value!=="__custom";if($("ch-sym").value==="__custom"){$("ch-custom").focus();return}saveChart()});
+$("ch-int").addEventListener("change",saveChart);
+$("ch-custom").addEventListener("keydown",e=>{if(e.key==="Enter"){const v=e.target.value.trim();if(!/^[A-Za-z0-9_:.!\-]{1,40}$/.test(v)){toast("Type a TradingView symbol like NASDAQ:NVDA or CME_MINI:NQ1!");return}saveChart()}});
+$("ch-open").addEventListener("click",()=>openSite("https://www.tradingview.com/chart/?symbol="+encodeURIComponent(chartSym())));
+function loadHeat(){try{const v=localStorage.getItem("pb.heat.src");if(v)$("hm-src").value=v}catch(e){}setFrame("hm-frame",{w:"heatmap",source:$("hm-src").value})}
+$("hm-src").addEventListener("change",()=>{try{localStorage.setItem("pb.heat.src",$("hm-src").value)}catch(e){}loadHeat()});
+// keep the widgets in step with light / dark mode
+new MutationObserver(()=>{if(curView!=="news")return;if(newsTab==="chart")saveChart();if(newsTab==="heat")loadHeat();if(newsTab==="cal"&&!$("cal-tv").hidden)setFrame("cal-tv",{w:"calendar",high:settings.news.impact==="high"?"1":"0"})}).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
 /* ---------- updates (desktop app only) ---------- */
 let updSt=null,updTimer=0,updTried=false,updAsked=false,updNotesOpen=false;
 const UPD_BUSY=["checking","downloading","installing","restarting"];

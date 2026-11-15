@@ -62,6 +62,31 @@ SETUPS
   never use, and save combinations you use often (one click picks all of
   their setups). "P&L by setup" shows each setup, or each combination.
 
+NEWS
+  The News tab (next to Journal and Notes) puts your weekend reading in one
+  place. It needs an internet connection.
+  - Headlines: the latest stories from FinancialJuice, MarketWatch, CNBC,
+    Yahoo Finance, Google News, the Federal Reserve and more, newest first.
+    Press Refresh, or set "Auto-check" to look for new ones every 5, 15 or
+    30 minutes while PropBook is open. Click a headline to open it in your
+    browser. Data headlines like "Actual 0.4% (Forecast 0.3%)" get a green
+    or red tag. "Sources" lets you turn sites on or off, add any site's RSS
+    feed, and see which ones didn't load.
+  - Red Folder: this week's economic calendar from ForexFactory, with the
+    red-folder (high impact) events, forecast and previous values, and a
+    countdown to the next one. Show orange folders or other currencies with
+    the filters. ForexFactory's free file doesn't include the released
+    numbers, so "Show TradingView calendar" shows the actual numbers.
+  - Colors: "stock futures" colors results by what usually helps (green) or
+    hurts (red) NQ and ES. Hot inflation counts as bad, for example. "US
+    dollar" colors them the way ForexFactory does. Either way it's a rule of
+    thumb, not a prediction.
+  - Charts and Heatmap: TradingView's free embedded chart (NQ, ES, YM, RTY,
+    gold, oil and more, or any symbol) and the S&P 500 / Nasdaq heatmap.
+    Futures in these may be delayed.
+  - The buttons at the top open FinancialJuice, ForexFactory, Unusual
+    Whales, TradingView, MarketWatch and Google News in your browser.
+
 NOTES
   Switch between "Journal" and "Notes" at the top of PropBook. Notes is a
   notepad for game plans, rules, end-of-day reviews or anything else. Click

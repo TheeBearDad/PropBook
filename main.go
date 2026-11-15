@@ -76,6 +76,7 @@ func main() {
 		downloadsDirs = []string{filepath.Join(dl, "PropBook"), filepath.Join(dl, "Trade Journal")}
 	}
 	go serveExtension()
+	serveWidgets()
 
 	b := make([]byte, 16)
 	rand.Read(b)
@@ -117,6 +118,11 @@ func main() {
 			"appVersion": version, "extDir": extDir, "extVersion": extBundledVersion, "extSeen": seen, "extSeenAgo": ago, "migratedFrom": migratedFrom})
 	}))
 	mux.HandleFunc("/api/startup", auth(handleStartup))
+	mux.HandleFunc("/api/news", auth(handleNews))
+	mux.HandleFunc("/api/news/cached", auth(handleNewsCached))
+	mux.HandleFunc("/api/news/info", auth(handleNewsInfo))
+	mux.HandleFunc("/api/calendar", auth(handleCalendar))
+	mux.HandleFunc("/api/openurl", auth(handleOpenURL))
 	mux.HandleFunc("/api/update", auth(handleUpdate))
 	mux.HandleFunc("/api/update/check", auth(handleUpdate))
 	mux.HandleFunc("/api/update/install", auth(handleUpdate))
@@ -518,6 +524,15 @@ func dailyBackup() {
 // openURL opens a web page in the person's normal browser (only ever the GitHub releases page).
 func openURL(u string) {
 	if !strings.HasPrefix(u, "https://github.com/") {
+		return
+	}
+	openExternal(u)
+}
+
+// openExternal hands a web address to the person's default browser.
+func openExternal(u string) {
+	if os.Getenv("PROPBOOK_NO_WINDOW") != "" { // tests: record instead of opening a browser
+		os.WriteFile(filepath.Join(dataDir, "last-opened-url.txt"), []byte(u), 0o644)
 		return
 	}
 	switch runtime.GOOS {
