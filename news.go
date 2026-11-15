@@ -543,8 +543,17 @@ func widgetConfig(q url.Values) (string, map[string]any, bool) {
 		if q.Get("high") == "1" {
 			imp = "1"
 		}
+		countries := []string{}
+		for _, c := range strings.Split(q.Get("countries"), ",") {
+			if regexp.MustCompile(`^[a-z]{2}$`).MatchString(c) {
+				countries = append(countries, c)
+			}
+		}
+		if len(countries) == 0 {
+			countries = []string{"us"}
+		}
 		return kind, map[string]any{"colorTheme": theme, "isTransparent": false, "width": "100%", "height": "100%",
-			"locale": "en", "importanceFilter": imp, "countryFilter": "us"}, true
+			"locale": "en", "importanceFilter": imp, "countryFilter": strings.Join(countries, ",")}, true
 	case "news":
 		return kind, map[string]any{"feedMode": "market", "market": "stock", "isTransparent": false, "displayMode": "regular",
 			"width": "100%", "height": "100%", "colorTheme": theme, "locale": "en"}, true

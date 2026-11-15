@@ -82,3 +82,14 @@ func TestWidgetConfigSanitises(t *testing.T) {
 		t.Fatalf("good values dropped: %+v", cfg)
 	}
 }
+
+func TestCalendarWidgetCountries(t *testing.T) {
+	_, cfg, _ := widgetConfig(url.Values{"w": {"calendar"}, "countries": {"us,ca,gb,<x>,EVIL"}})
+	if cfg["countryFilter"] != "us,ca,gb" {
+		t.Fatalf("countries %v", cfg["countryFilter"])
+	}
+	_, cfg, _ = widgetConfig(url.Values{"w": {"calendar"}})
+	if cfg["countryFilter"] != "us" {
+		t.Fatalf("default countries %v", cfg["countryFilter"])
+	}
+}

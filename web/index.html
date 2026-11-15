@@ -308,6 +308,14 @@ input.nw-in[type=search]{width:220px}
 .fold{width:18px;height:15px;vertical-align:-2px}
 .fold path{stroke:rgba(0,0,0,.25);stroke-width:1}
 .f-high .fold path,.fold.f-high path{fill:#e5484d}.f-med .fold path{fill:#f76b15}.f-low .fold path{fill:#e2b203}.f-hol .fold path{fill:#8b968f}
+.fdot.f-med{background:#f76b15}.cal-curs{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.cchip{border:1px solid var(--line-2);background:var(--panel-2);color:var(--muted);border-radius:999px;padding:3px 10px;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer}
+.cchip[aria-pressed="true"]{color:var(--fg);border-color:var(--win);background:color-mix(in srgb,var(--win) 14%,var(--panel-2))}
+.cchip:focus-visible,.fbtn:focus-visible{outline:2px solid var(--focus);outline-offset:1px}
+.linkish.plain{color:var(--muted);font-size:12.5px}
+.fbtn{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:3px;border-radius:4px;padding:2px}
+.fbtn .mine{width:5px;height:5px;border-radius:50%;background:var(--focus)}
+.cal-t .cur{font-weight:600}.cal-t tr.us .cur{color:var(--fg)}.cal-t tr:not(.us) .cur{color:var(--muted)}
 .fdot{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:0}.fdot.f-high{background:#e5484d}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .cal-tv{display:flex;gap:12px;justify-content:space-between;align-items:center;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:12px}
@@ -554,12 +562,14 @@ td.pt{color:color-mix(in srgb,var(--win) 75%,var(--muted))}td.lt{color:color-mix
         <span class="grow"></span>
         <div class="seg" role="radiogroup" aria-label="Impact">
           <input type="radio" name="cal-imp" id="ci-high" value="high"><label for="ci-high"><span class="fdot f-high"></span>Red</label>
-          <input type="radio" name="cal-imp" id="ci-med" value="med"><label for="ci-med">Red + orange</label>
+          <input type="radio" name="cal-imp" id="ci-med" value="med"><label for="ci-med"><span class="fdot f-high"></span><span class="fdot f-med"></span>Red + orange</label>
           <input type="radio" name="cal-imp" id="ci-all" value="all"><label for="ci-all">All</label>
         </div>
-        <select class="nw-in" id="cal-cur" aria-label="Currency"><option value="USD">USD only</option><option value="">All currencies</option></select>
+        <select class="nw-in" id="cal-scheme" aria-label="How folders are ranked"><option value="us">Folders: for US futures</option><option value="ff">Folders: ForexFactory's</option></select>
         <select class="nw-in" id="cal-mode" aria-label="What the colors mean"><option value="stocks">Colors: stock futures</option><option value="usd">Colors: US dollar</option></select>
       </div>
+      <div class="cal-curs" role="group" aria-label="Countries"><span class="note">Countries:</span><span id="cal-curs"></span><button type="button" class="linkish plain" id="cal-curs-all">All</button><button type="button" class="linkish plain" id="cal-curs-us">US only</button></div>
+      <p class="note cal-legend" id="cal-folders"></p>
       <p class="note cal-legend" id="cal-legend"></p>
       <div class="cal-next" id="cal-next" hidden></div>
       <div class="table-box"><table class="cal-t"><thead><tr><th>Time</th><th><span class="sr">Impact</span></th><th>Cur</th><th>Event</th><th class="num">Actual</th><th class="num">Forecast</th><th class="num">Previous</th></tr></thead><tbody id="cal-body"></tbody></table></div>
@@ -894,7 +904,9 @@ function mergeSettings(s){
   o.ignored=Array.isArray(s.ignored)?s.ignored:[];
   const up=s.updates||{};o.updates={auto:!!up.auto,skip:typeof up.skip==="string"?up.skip:""};
   const nw=s.news||{};o.news={off:Array.isArray(nw.off)?nw.off:defaultOffFeeds(),custom:Array.isArray(nw.custom)?nw.custom.filter(f=>f&&f.url):[],
-    auto:[0,5,15,30].includes(+nw.auto)?+nw.auto:0,mode:nw.mode==="usd"?"usd":"stocks",impact:["high","med","all"].includes(nw.impact)?nw.impact:"high",cur:typeof nw.cur==="string"?nw.cur:"USD"};
+    auto:[0,5,15,30].includes(+nw.auto)?+nw.auto:0,mode:nw.mode==="usd"?"usd":"stocks",impact:["high","med","all"].includes(nw.impact)?nw.impact:"med",
+    curs:Array.isArray(nw.curs)?nw.curs.filter(c=>typeof c==="string"&&/^[A-Z]{3}$/.test(c)):calCurs(),scheme:nw.scheme==="ff"?"ff":"us",
+    ovr:nw.ovr&&typeof nw.ovr==="object"&&!Array.isArray(nw.ovr)?nw.ovr:{}};
   return o;
 }
 function accounts(){return settings.accounts}
@@ -1608,6 +1620,8 @@ const FEEDS=[
   {id:"sa",name:"Seeking Alpha: market news",url:"https://seekingalpha.com/market_currents.xml"},
   {id:"fxs",name:"FXStreet",url:"https://www.fxstreet.com/rss/news"},
 ];
+function calCurs(){return ["USD","EUR","GBP","JPY","CAD","CNY","AUD","NZD","CHF"]} // a function: settings read it before this part of the page runs
+const CAL_CURS=calCurs();
 function defaultOffFeeds(){return ["mwb","cnbce","invec","sa","fxs"]} // a function so settings can use it before this part of the page runs
 let newsChecked=false,newsItems=[],newsFeedStatus={},newsAt=0,newsBusy=false,newsTimer=0,newsTab="head",newsInfo=null,newsLoaded=false,cal=null,calBusy=false;
 function allFeeds(){return FEEDS.concat(settings.news.custom.map(f=>({id:f.id,name:f.name,url:f.url,custom:true})))}
@@ -1622,7 +1636,7 @@ function ago(ms){const s=(Date.now()-ms)/1000;return s<60?"just now":s<3600?Math
 async function openNews(){
   $("nw-webonly").hidden=DESK;
   if(!newsLoaded){newsLoaded=true;
-    $("nw-auto").value=String(settings.news.auto);$("cal-mode").value=settings.news.mode;$("ci-"+settings.news.impact).checked=true;$("cal-cur").value=settings.news.cur;
+    $("nw-auto").value=String(settings.news.auto);$("cal-mode").value=settings.news.mode;$("ci-"+settings.news.impact).checked=true;$("cal-scheme").value=settings.news.scheme;
     try{const v=localStorage.getItem("pb.news.tab");if(v)newsTab=v}catch(e){}
     if(DESK){try{newsInfo=await (await api("/api/news/info")).json()}catch(e){}
       try{const c=await (await api("/api/news/cached")).json();if(c.items&&c.items.length&&!newsItems.length){newsItems=c.items;newsAt=c.savedAt||0}}catch(e){}}
@@ -1733,41 +1747,71 @@ async function loadCal(force){
 }
 $("cal-refresh").addEventListener("click",()=>loadCal(true));
 document.querySelectorAll('input[name=cal-imp]').forEach(r=>r.addEventListener("change",()=>{settings.news.impact=r.value;Store.saveSettings().catch(()=>{});renderCal()}));
-$("cal-cur").addEventListener("change",e=>{settings.news.cur=e.target.value;Store.saveSettings().catch(()=>{});renderCal()});
+$("cal-scheme").addEventListener("change",e=>{settings.news.scheme=e.target.value;Store.saveSettings().catch(()=>{});renderCal()});
+function setCurs(list){settings.news.curs=list;Store.saveSettings().catch(()=>{});renderCal();if(!$("cal-tv").hidden)tvCal()}
+$("cal-curs").addEventListener("click",e=>{const b=e.target.closest("[data-cur]");if(!b)return;const c=b.dataset.cur,on=settings.news.curs.includes(c);
+  setCurs(on?settings.news.curs.filter(x=>x!==c):settings.news.curs.concat(c))});
+$("cal-curs-all").addEventListener("click",()=>setCurs(CAL_CURS.slice()));$("cal-curs-us").addEventListener("click",()=>setCurs(["USD"]));
+// click a folder to re-rank that event yourself: red → orange → yellow → back to PropBook's choice
+$("cal-body").addEventListener("click",e=>{const b=e.target.closest("[data-ovr]");if(!b)return;const k=b.dataset.ovr,i=k.indexOf("|");
+  const ev={country:k.slice(0,i),title:k.slice(i+1)},raw=(cal.events||[]).find(x=>x.country===ev.country&&x.title===ev.title)||ev;
+  const shown=tierOf(raw);delete settings.news.ovr[k];const dflt=tierOf(raw);
+  const nxt={high:"med",med:"low",low:"high"}[shown]||"high";      // always move on to the next color
+  if(nxt!==dflt)settings.news.ovr[k]=nxt;Store.saveSettings().catch(()=>{});renderCal();
+  const r=$("cal-body").querySelector('[data-ovr="'+CSS.escape(k)+'"]');if(r)r.focus();
+  toast(settings.news.ovr[k]?"“"+ev.title+"” will always show as "+({high:"red",med:"orange",low:"yellow"})[nxt]+".":"“"+ev.title+"” is back to the normal ranking ("+({high:"red",med:"orange",low:"yellow"})[nxt]+").")});
 $("cal-mode").addEventListener("change",e=>{settings.news.mode=e.target.value;Store.saveSettings().catch(()=>{});renderCal();renderNews()});
 const IMP={High:"high",Medium:"med",Low:"low",Holiday:"hol"};
-function folder(imp){const k=IMP[imp]||"low";return '<span class="f-'+k+'" title="'+esc((imp||"Low")+" impact")+'"><svg viewBox="0 0 20 16" aria-hidden="true" class="fold"><path d="M1 3a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2z"/></svg><span class="sr">'+esc((imp||"Low")+" impact")+'</span></span>'}
+const TIER_WORD={high:"High impact",med:"Medium impact",low:"Low impact",hol:"Holiday"};
+/* How much an event matters to someone trading US index futures. US red folders stay red; another country's red
+   folder drops to orange, its orange to yellow. "ForexFactory's" keeps their ratings as they are. */
+function tierOf(e){const k=e.country+"|"+e.title,o=settings.news.ovr[k];if(o)return o;
+  const ff=IMP[e.impact]||"low";if(ff==="hol"||settings.news.scheme==="ff"||e.country==="USD")return ff;
+  return ff==="high"?"med":"low"}
+function folderSvg(t){return '<svg viewBox="0 0 20 16" aria-hidden="true" class="fold"><path d="M1 3a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2z"/></svg>'}
+function folder(imp){const k=IMP[imp]||imp||"low";return '<span class="f-'+k+'" title="'+esc(TIER_WORD[k]||"Low impact")+'">'+folderSvg()+'<span class="sr">'+esc(TIER_WORD[k]||"Low impact")+'</span></span>'}
+function folderBtn(e,t){const k=e.country+"|"+e.title,mine=!!settings.news.ovr[k],ff=IMP[e.impact]||"low";
+  const why=(TIER_WORD[t]||"Low impact")+(mine?" (you set this)":ff!==t?" (ForexFactory: "+TIER_WORD[ff].toLowerCase()+")":"")+". Click to change.";
+  return '<button type="button" class="fbtn f-'+t+'" data-ovr="'+esc(k)+'" title="'+esc(why)+'" aria-label="'+esc(why)+'">'+folderSvg()+(mine?'<span class="mine" aria-hidden="true"></span>':'')+'</button>'}
 function renderCal(){
   const mode=settings.news.mode;
   $("cal-legend").innerHTML=mode==="stocks"
-    ?'<span class="up">Green</span> = a result that usually helps stock index futures (NQ, ES), <span class="down">red</span> = one that usually hurts them. As a rule of thumb, hotter inflation, higher rates and more jobless claims are read as bad for stocks, and stronger growth data as good. It\'s a guide, not a prediction.'
+    ?'<span class="up">Green</span> = a US result that usually helps stock index futures (NQ, ES), <span class="down">red</span> = one that usually hurts them. As a rule of thumb, hotter inflation, higher rates and more jobless claims are read as bad for stocks, and stronger growth data as good. Other countries\' numbers are colored for their own currency. It\'s a guide, not a prediction.'
     :'<span class="up">Green</span> = better than forecast for the currency, <span class="down">red</span> = worse, the same way ForexFactory colors it. For stock futures that can be the opposite: hot US inflation shows green here.';
+  const curs=settings.news.curs,present=new Set((cal&&cal.events||[]).map(e=>e.country));
+  $("cal-curs").innerHTML=CAL_CURS.concat([...present].filter(c=>!CAL_CURS.includes(c)).sort()).map(c=>'<button type="button" class="cchip" data-cur="'+esc(c)+'" aria-pressed="'+curs.includes(c)+'">'+esc(c)+'</button> ').join("");
+  $("cal-folders").innerHTML=settings.news.scheme==="us"
+    ?'<span class="fdot f-high"></span>Red = high impact on US futures: the US red folders. <span class="fdot f-med"></span>Orange = less important: other countries\' red folders and US orange ones. Yellow = minor. Click any folder to change how an event is ranked.'
+    :'Folders are ForexFactory\'s own ratings for each currency. Click any folder to change how an event is ranked.';
   if(!cal){$("cal-body").innerHTML="";return}
-  const imp=settings.news.impact,cur=settings.news.cur;
-  const keep=e=>(!cur||e.country===cur)&&(imp==="all"||e.impact==="High"||(imp==="med"&&e.impact==="Medium"));
-  const ev=(cal.events||[]).map(e=>Object.assign({},e,{ts:Date.parse(e.date)})).filter(e=>!isNaN(e.ts)&&keep(e)).sort((a,b)=>a.ts-b.ts);
-  const now=Date.now(),next=ev.find(e=>e.ts>now&&e.impact!=="Holiday");
+  const imp=settings.news.impact;
+  const ev=(cal.events||[]).map(e=>Object.assign({},e,{ts:Date.parse(e.date),tier:tierOf(e)}))
+    .filter(e=>!isNaN(e.ts)&&curs.includes(e.country)&&(imp==="all"||e.tier==="high"||(imp==="med"&&e.tier==="med"))).sort((a,b)=>a.ts-b.ts||(a.country==="USD"?-1:1));
+  const now=Date.now(),next=ev.find(e=>e.ts>now&&e.tier==="high")||ev.find(e=>e.ts>now&&e.tier!=="hol");
   $("cal-status").textContent=cal.error?(cal.events&&cal.events.length?"Showing the copy from "+new Date(cal.at).toLocaleString("en-US",{weekday:"short",hour:"numeric",minute:"2-digit"})+". "+cal.error+".":cal.error+"."):cal.at?"Updated "+ago(cal.at)+" · ForexFactory":"";
   if(next){const mins=Math.round((next.ts-now)/60000),h=Math.floor(mins/60),d=Math.floor(h/24);
-    $("cal-next").hidden=false;$("cal-next").innerHTML='Next: '+folder(next.impact)+' <b>'+esc(next.country)+' '+esc(next.title)+'</b> · '+esc(new Date(next.ts).toLocaleString("en-US",{weekday:"short",hour:"numeric",minute:"2-digit"}))+' · in '+(d?d+"d "+(h%24)+"h":h?h+"h "+(mins%60)+"m":mins+" min")+(next.forecast?' · forecast <b class="num">'+esc(next.forecast)+'</b>':'')}
+    $("cal-next").hidden=false;$("cal-next").innerHTML='Next: '+folder(next.tier)+' <b>'+esc(next.country)+' '+esc(next.title)+'</b> · '+esc(new Date(next.ts).toLocaleString("en-US",{weekday:"short",hour:"numeric",minute:"2-digit"}))+' · in '+(d?d+"d "+(h%24)+"h":h?h+"h "+(mins%60)+"m":mins+" min")+(next.forecast?' · forecast <b class="num">'+esc(next.forecast)+'</b>':'')}
   else $("cal-next").hidden=true;
-  if(!ev.length){$("cal-body").innerHTML='<tr><td colspan="7" class="nw-empty">'+(cal.events&&cal.events.length?"Nothing matches these filters this week.":"No calendar yet. Press Refresh.")+'</td></tr>';return}
+  if(!ev.length){$("cal-body").innerHTML='<tr><td colspan="7" class="nw-empty">'+(cal.events&&cal.events.length?(curs.length?"Nothing matches these filters this week.":"Pick at least one country above."):"No calendar yet. Press Refresh.")+'</td></tr>';return}
   let html="",last="";const today=new Date().toDateString();
   ev.forEach(e=>{const d=new Date(e.ts),dk=d.toDateString();
     if(dk!==last){last=dk;html+='<tr class="cday'+(dk===today?' today':'')+'"><td colspan="7">'+esc(d.toLocaleDateString("en-US",{weekday:"long",month:"short",day:"numeric"}))+(dk===today?' · Today':'')+'</td></tr>'}
     const allDay=e.impact==="Holiday"||(d.getHours()===0&&d.getMinutes()===0&&/holiday|tentative/i.test(e.title+" "+(e.time||"")));
     const tm=allDay?"All day":d.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"});
-    const s=e.actual?surprise(e.actual,e.forecast,e.previous,e.title,mode):{cls:"",word:""};
+    const m=e.country==="USD"?mode:"usd"; // other countries' numbers are colored for their own currency
+    const s=e.actual?surprise(e.actual,e.forecast,e.previous,e.title,m):{cls:"",word:""};
     // before the release, show which way the forecast leans versus last time
     let lean="";const fv=numVal(e.forecast),pv=numVal(e.previous);
-    if(!e.actual&&fv!=null&&pv!=null&&fv!==pv){const dir=directionFor(e.title,mode),up=fv>pv;const c=!dir?"flat":(up===(dir>0))?"up":"down";lean='<span class="arrow '+c+'" title="Forecast is '+(up?"above":"below")+' the previous reading">'+(up?"▲":"▼")+'</span>'}
-    html+='<tr class="'+(e.ts<now?'past':'')+(next&&e===next?' next':'')+'"><td class="tm">'+esc(tm)+'</td><td>'+folder(e.impact)+'</td><td>'+esc(e.country)+'</td><td class="ev">'+esc(e.title)+'</td>'+
+    if(!e.actual&&fv!=null&&pv!=null&&fv!==pv){const dir=directionFor(e.title,m),up=fv>pv;const c=!dir?"flat":(up===(dir>0))?"up":"down";lean='<span class="arrow '+c+'" title="Forecast is '+(up?"above":"below")+' the previous reading">'+(up?"▲":"▼")+'</span>'}
+    html+='<tr class="'+(e.ts<now?'past':'')+(next&&e===next?' next':'')+(e.country==="USD"?' us':'')+'"><td class="tm">'+esc(tm)+'</td><td>'+(e.tier==="hol"?folder("hol"):folderBtn(e,e.tier))+'</td><td class="cur">'+esc(e.country)+'</td><td class="ev">'+esc(e.title)+'</td>'+
       '<td class="num '+s.cls+'"'+(s.word?' title="'+esc(s.word)+'"':'')+'>'+(e.actual?'<b>'+esc(e.actual)+'</b>':e.ts<now&&e.impact!=="Holiday"?'<span class="note">see TradingView</span>':'')+'</td>'+
       '<td class="num">'+esc(e.forecast||"")+lean+'</td><td class="num">'+esc(e.previous||"")+'</td></tr>'});
   $("cal-body").innerHTML=html;
 }
 $("cal-tv-btn").addEventListener("click",()=>{const box=$("cal-tv"),open=box.hidden;box.hidden=!open;$("cal-tv-btn").setAttribute("aria-expanded",String(open));$("cal-tv-btn").textContent=open?"Hide TradingView calendar":"Show TradingView calendar";
-  if(open)setFrame("cal-tv",{w:"calendar",high:settings.news.impact==="high"?"1":"0"})});
+  if(open)tvCal()});
+const TV_COUNTRY={USD:"us",EUR:"eu",GBP:"gb",JPY:"jp",CAD:"ca",CNY:"cn",AUD:"au",NZD:"nz",CHF:"ch"};
+function tvCal(){setFrame("cal-tv",{w:"calendar",high:settings.news.impact==="high"?"1":"0",countries:settings.news.curs.map(c=>TV_COUNTRY[c]).filter(Boolean).join(",")||"us"})}
 
 /* TradingView widgets */
 function tvTheme(){return document.documentElement.dataset.theme==="light"||(document.documentElement.dataset.theme!=="dark"&&matchMedia("(prefers-color-scheme: light)").matches)?"light":"dark"}
@@ -1787,7 +1831,7 @@ $("ch-open").addEventListener("click",()=>openSite("https://www.tradingview.com/
 function loadHeat(){try{const v=localStorage.getItem("pb.heat.src");if(v)$("hm-src").value=v}catch(e){}setFrame("hm-frame",{w:"heatmap",source:$("hm-src").value})}
 $("hm-src").addEventListener("change",()=>{try{localStorage.setItem("pb.heat.src",$("hm-src").value)}catch(e){}loadHeat()});
 // keep the widgets in step with light / dark mode
-new MutationObserver(()=>{if(curView!=="news")return;if(newsTab==="chart")saveChart();if(newsTab==="heat")loadHeat();if(newsTab==="cal"&&!$("cal-tv").hidden)setFrame("cal-tv",{w:"calendar",high:settings.news.impact==="high"?"1":"0"})}).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+new MutationObserver(()=>{if(curView!=="news")return;if(newsTab==="chart")saveChart();if(newsTab==="heat")loadHeat();if(newsTab==="cal"&&!$("cal-tv").hidden)tvCal()}).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
 /* ---------- updates (desktop app only) ---------- */
 let updSt=null,updTimer=0,updTried=false,updAsked=false,updNotesOpen=false;
 const UPD_BUSY=["checking","downloading","installing","restarting"];

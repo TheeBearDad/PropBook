@@ -48,11 +48,17 @@ NEWS
     browser. Data headlines like "Actual 0.4% (Forecast 0.3%)" get a green
     or red tag. "Sources" lets you turn sites on or off, add any site's RSS
     feed, and see which ones didn't load.
-  - Red Folder: this week's economic calendar from ForexFactory, with the
-    red-folder (high impact) events, forecast and previous values, and a
-    countdown to the next one. Show orange folders or other currencies with
-    the filters. ForexFactory's free file doesn't include the released
-    numbers, so "Show TradingView calendar" shows the actual numbers.
+  - Red Folder: this week's economic calendar from ForexFactory for the US,
+    Europe, the UK, Japan, Canada, China, Australia, New Zealand and
+    Switzerland, with forecast and previous values and a countdown to the
+    next big one. Folders are ranked for US futures traders: red = US
+    high-impact events, orange = other countries' high-impact events and
+    US medium ones, yellow = minor. Switch to "Folders: ForexFactory's" to
+    use their own ratings. Click any folder to re-rank that event (for
+    example, make CAD PPI red); PropBook remembers it. Use the country
+    buttons to choose which countries to show. ForexFactory's free file
+    doesn't include the released numbers, so "Show TradingView calendar"
+    shows the actual numbers for the same countries.
   - Colors: "stock futures" colors results by what usually helps (green) or
     hurts (red) NQ and ES. Hot inflation counts as bad, for example. "US
     dollar" colors them the way ForexFactory does. Either way it's a rule of
