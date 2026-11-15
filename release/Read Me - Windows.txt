@@ -78,6 +78,10 @@ NOTES
   and links. Click a checkbox to tick it. Notes save as you type, and are
   kept in your journal file with everything else. Pin a note to keep it at
   the top of the list, and use the search box to find one.
+  Pictures: paste a screenshot (Ctrl+V), drag a picture in, or use the
+  picture button on the toolbar. Click a picture to make it small, medium,
+  large or full width, view it full size, or remove it. Pictures are saved
+  in Documents/PropBook/screenshots.
   Shortcuts: Ctrl+B bold, Ctrl+I italic, Ctrl+U underline, Ctrl+K link,
   Tab / Shift+Tab to indent a list item, Ctrl+Enter to tick a checkbox.
 

@@ -328,6 +328,19 @@ input.nw-in[type=search]{width:220px}
 .src-add{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap}.src-add .field{flex:1;min-width:160px}
 @media (max-width:700px){.nw-it{grid-template-columns:1fr}.nw-it .t{padding:0}.nw-it.is-new .t::after{display:inline;margin-left:8px}input.nw-in[type=search]{width:100%}.cal-t th:nth-child(7),.cal-t td:nth-child(7),.cal-t th:nth-child(3),.cal-t td:nth-child(3){display:none}.cal-t tr.cday td{display:table-cell}.cal-t td,.cal-t th{padding:7px 5px}.tv-frame.tall{height:70vh}}
 .linkish{all:unset;cursor:pointer;color:var(--loss);text-decoration:underline}.linkish:focus-visible{outline:2px solid var(--focus)}
+.ne-body img{display:block;max-width:100%;height:auto;margin:8px 0;border-radius:8px;border:1px solid var(--line-2);cursor:pointer}
+.ne-body img[data-w="s"]{width:240px}.ne-body img[data-w="m"]{width:420px}.ne-body img[data-w="l"]{width:720px}.ne-body img[data-w="f"]{width:100%}
+.ne-body img.sel{outline:3px solid var(--focus);outline-offset:2px}
+#n-open{position:relative}
+.imgbar{position:absolute;z-index:4;display:flex;gap:2px;align-items:center;flex-wrap:wrap;padding:4px 6px;border:1px solid var(--line-2);border-radius:9px;background:var(--panel);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.imgbar .note{padding:0 6px}.imgbar .sep{width:1px;height:18px;background:var(--line-2);margin:0 4px}
+.imgbar button{border:1px solid transparent;background:transparent;color:var(--fg);border-radius:6px;height:28px;padding:0 8px;font:inherit;font-size:12.5px;cursor:pointer}
+.imgbar button:hover{background:var(--panel-2);border-color:var(--line-2)}.imgbar button[aria-pressed="true"]{border-color:var(--win);background:color-mix(in srgb,var(--win) 16%,transparent)}
+.imgbar button.danger{color:var(--loss)}.imgbar button:focus-visible{outline:2px solid var(--focus)}
+.ne-body.drag{outline:2px dashed var(--focus);outline-offset:-6px}
+.overlay.iv{display:flex;align-items:center;justify-content:center}.iv-box{position:relative;max-width:96vw;max-height:92vh}
+.iv-box img{max-width:96vw;max-height:92vh;display:block;border-radius:8px;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.iv-box .x{position:absolute;top:8px;right:8px;background:var(--panel);border:1px solid var(--line-2)}
 .kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:13px}.kv dt{color:var(--muted)}.kv dd{margin:0;min-width:0;overflow-wrap:anywhere}
 .auto-banner{display:flex;gap:12px;align-items:center;justify-content:space-between;border-radius:8px;padding:8px 8px 8px 14px;font-size:13.5px;border:1px solid}
 .auto-banner.ok{border-color:color-mix(in srgb,var(--win) 50%,transparent);background:color-mix(in srgb,var(--win) 10%,var(--panel))}
@@ -515,7 +528,8 @@ td.pt{color:color-mix(in srgb,var(--win) 75%,var(--muted))}td.lt{color:color-mix
             <button class="btn sm danger ghost" type="button" id="n-del">Delete</button>
           </div>
           <div class="ne-meta" id="n-meta"></div>
-          <div class="tb" id="n-tb" role="toolbar" aria-label="Formatting"><button type="button" data-cmd="undo" title="Undo (Ctrl+Z)" aria-label="Undo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg></button><button type="button" data-cmd="redo" title="Redo (Ctrl+Y)" aria-label="Redo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 14 5-5-5-5"/><path d="M20 9H9a5 5 0 0 0 0 10h3"/></svg></button><span class="sep"></span><select id="tb-block" aria-label="Text style" title="Text style"><option value="p">Normal</option><option value="h2">Heading</option><option value="h3">Subheading</option><option value="blockquote">Quote</option></select><span class="sep"></span><button type="button" data-cmd="bold" title="Bold (Ctrl+B)" aria-label="Bold" aria-pressed="false"><b style="font-size:15px">B</b></button><button type="button" data-cmd="italic" title="Italic (Ctrl+I)" aria-label="Italic" aria-pressed="false"><i style="font-size:15px;font-family:Georgia,serif">I</i></button><button type="button" data-cmd="underline" title="Underline (Ctrl+U)" aria-label="Underline" aria-pressed="false"><u style="font-size:15px">U</u></button><button type="button" data-cmd="strikeThrough" title="Strikethrough" aria-label="Strikethrough" aria-pressed="false"><s style="font-size:15px">S</s></button><span class="swatches"><button type="button" id="tb-color" title="Text color" aria-label="Text color" aria-haspopup="true" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20h14"/><path d="m7 16 5-12 5 12"/><path d="M9 12h6"/></svg></button><span class="sw-pop" id="pop-color" hidden role="menu" aria-label="Text color"></span></span><span class="swatches"><button type="button" id="tb-hl" title="Highlight" aria-label="Highlight" aria-haspopup="true" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 11-6 6v3h3l6-6"/><path d="m22 4-4.6 4.6-4-4L18 0"/><path d="m13.4 4.6 6 6"/></svg></button><span class="sw-pop" id="pop-hl" hidden role="menu" aria-label="Highlight"></span></span><span class="sep"></span><button type="button" data-cmd="checklist" title="Checklist" aria-label="Checklist" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="6" height="6" rx="1"/><path d="m4.5 8 1 1 2-2"/><path d="M13 8h8"/><rect x="3" y="14" width="6" height="6" rx="1"/><path d="M13 17h8"/></svg></button><button type="button" data-cmd="insertUnorderedList" title="Bulleted list" aria-label="Bulleted list" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h12M9 12h12M9 18h12"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg></button><button type="button" data-cmd="insertOrderedList" title="Numbered list" aria-label="Numbered list" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6h11M10 12h11M10 18h11"/><path d="M4 6h1v4M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></button><button type="button" data-cmd="outdent" title="Decrease indent" aria-label="Decrease indent"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 6H11M21 12H11M21 18H3M3 6h4"/><path d="m7 9-3 3 3 3"/></svg></button><button type="button" data-cmd="indent" title="Increase indent" aria-label="Increase indent"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 6H11M21 12H11M21 18H3"/><path d="m3 9 3 3-3 3"/></svg></button><span class="sep"></span><button type="button" data-cmd="hr" title="Divider line" aria-label="Divider line"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h18"/></svg></button><button type="button" data-cmd="date" title="Insert today's date" aria-label="Insert today's date"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg></button><button type="button" data-cmd="link" title="Add link" aria-label="Add link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg></button><button type="button" data-cmd="removeFormat" title="Clear formatting" aria-label="Clear formatting"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/><path d="m3 3 18 18"/></svg></button></div>
+          <div class="tb" id="n-tb" role="toolbar" aria-label="Formatting"><button type="button" data-cmd="undo" title="Undo (Ctrl+Z)" aria-label="Undo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg></button><button type="button" data-cmd="redo" title="Redo (Ctrl+Y)" aria-label="Redo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 14 5-5-5-5"/><path d="M20 9H9a5 5 0 0 0 0 10h3"/></svg></button><span class="sep"></span><select id="tb-block" aria-label="Text style" title="Text style"><option value="p">Normal</option><option value="h2">Heading</option><option value="h3">Subheading</option><option value="blockquote">Quote</option></select><span class="sep"></span><button type="button" data-cmd="bold" title="Bold (Ctrl+B)" aria-label="Bold" aria-pressed="false"><b style="font-size:15px">B</b></button><button type="button" data-cmd="italic" title="Italic (Ctrl+I)" aria-label="Italic" aria-pressed="false"><i style="font-size:15px;font-family:Georgia,serif">I</i></button><button type="button" data-cmd="underline" title="Underline (Ctrl+U)" aria-label="Underline" aria-pressed="false"><u style="font-size:15px">U</u></button><button type="button" data-cmd="strikeThrough" title="Strikethrough" aria-label="Strikethrough" aria-pressed="false"><s style="font-size:15px">S</s></button><span class="swatches"><button type="button" id="tb-color" title="Text color" aria-label="Text color" aria-haspopup="true" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20h14"/><path d="m7 16 5-12 5 12"/><path d="M9 12h6"/></svg></button><span class="sw-pop" id="pop-color" hidden role="menu" aria-label="Text color"></span></span><span class="swatches"><button type="button" id="tb-hl" title="Highlight" aria-label="Highlight" aria-haspopup="true" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 11-6 6v3h3l6-6"/><path d="m22 4-4.6 4.6-4-4L18 0"/><path d="m13.4 4.6 6 6"/></svg></button><span class="sw-pop" id="pop-hl" hidden role="menu" aria-label="Highlight"></span></span><span class="sep"></span><button type="button" data-cmd="checklist" title="Checklist" aria-label="Checklist" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="6" height="6" rx="1"/><path d="m4.5 8 1 1 2-2"/><path d="M13 8h8"/><rect x="3" y="14" width="6" height="6" rx="1"/><path d="M13 17h8"/></svg></button><button type="button" data-cmd="insertUnorderedList" title="Bulleted list" aria-label="Bulleted list" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h12M9 12h12M9 18h12"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg></button><button type="button" data-cmd="insertOrderedList" title="Numbered list" aria-label="Numbered list" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6h11M10 12h11M10 18h11"/><path d="M4 6h1v4M4 10h2"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1"/></svg></button><button type="button" data-cmd="outdent" title="Decrease indent" aria-label="Decrease indent"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 6H11M21 12H11M21 18H3M3 6h4"/><path d="m7 9-3 3 3 3"/></svg></button><button type="button" data-cmd="indent" title="Increase indent" aria-label="Increase indent"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 6H11M21 12H11M21 18H3"/><path d="m3 9 3 3-3 3"/></svg></button><span class="sep"></span><button type="button" data-cmd="hr" title="Divider line" aria-label="Divider line"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h18"/></svg></button><button type="button" data-cmd="date" title="Insert today's date" aria-label="Insert today's date"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/></svg></button><button type="button" data-cmd="image" title="Insert picture (or paste / drag one in)" aria-label="Insert picture"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m21 17-5-5-9 8"/></svg></button><input type="file" id="n-file" accept="image/png,image/jpeg,image/webp,image/gif,image/bmp" multiple hidden><button type="button" data-cmd="link" title="Add link" aria-label="Add link"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg></button><button type="button" data-cmd="removeFormat" title="Clear formatting" aria-label="Clear formatting"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/><path d="m3 3 18 18"/></svg></button></div>
+          <div class="imgbar" id="n-imgbar" hidden role="toolbar" aria-label="Picture"><span class="note">Size</span><button type="button" data-iw="s">Small</button><button type="button" data-iw="m">Medium</button><button type="button" data-iw="l">Large</button><button type="button" data-iw="f">Full width</button><span class="sep"></span><button type="button" data-ia="view">View</button><button type="button" data-ia="del" class="danger">Remove</button></div>
           <div class="ne-body" id="n-body" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Note text" data-ph="Start writing…" spellcheck="true"></div>
           <div class="ne-foot"><span id="n-count"></span><span id="n-saved" aria-live="polite"></span></div>
         </div>
@@ -606,6 +620,9 @@ td.pt{color:color-mix(in srgb,var(--win) 75%,var(--muted))}td.lt{color:color-mix
     </section>
   </div>
 </div>
+
+<!-- Picture viewer -->
+<div class="overlay iv" id="ov-img" hidden><div class="iv-box" role="dialog" aria-modal="true" aria-label="Picture"><img id="iv-img" alt=""><button class="x" type="button" data-close aria-label="Close">×</button></div></div>
 
 <!-- News sources -->
 <div class="overlay" id="ov-src" hidden>
@@ -1447,7 +1464,10 @@ function setView(v,quiet){
 VIEWS.forEach(k=>$("v-"+k).addEventListener("click",()=>setView(k)));
 $("v-journal").parentElement.addEventListener("keydown",e=>{if(e.key!=="ArrowRight"&&e.key!=="ArrowLeft")return;e.preventDefault();
   const i=VIEWS.indexOf(curView),o=VIEWS[(i+(e.key==="ArrowRight"?1:VIEWS.length-1))%VIEWS.length];setView(o);$("v-"+o).focus()});
-const ALLOWED={B:1,STRONG:1,I:1,EM:1,U:1,S:1,STRIKE:1,DEL:1,MARK:1,H2:1,H3:1,P:1,DIV:1,BR:1,UL:1,OL:1,LI:1,BLOCKQUOTE:1,HR:1,A:1,SPAN:1,FONT:1};
+const ALLOWED={B:1,STRONG:1,I:1,EM:1,U:1,S:1,STRIKE:1,DEL:1,MARK:1,H2:1,H3:1,P:1,DIV:1,BR:1,UL:1,OL:1,LI:1,BLOCKQUOTE:1,HR:1,A:1,SPAN:1,FONT:1,IMG:1};
+// pictures: only ones PropBook saved itself (or, without the desktop app, kept inside the note); never outside web images
+function cleanImgSrc(v){v=String(v||"").trim();if(/^\/(shots|_blob)\/[A-Za-z0-9_.\-]+$/.test(v))return v;if(/^data:image\/(png|jpe?g|webp|gif);base64,[A-Za-z0-9+\/=]+$/.test(v))return v;
+  if(location.origin&&v.startsWith(location.origin+"/shots/"))return cleanImgSrc(v.slice(location.origin.length));return ""}
 const RENAME={H1:"H2",H4:"H3",H5:"H3",H6:"H3",PRE:"P",SECTION:"DIV",ARTICLE:"DIV",HEADER:"DIV",FOOTER:"DIV",TABLE:"DIV",TR:"DIV",TD:"SPAN",TH:"SPAN",CODE:"SPAN"};
 function cleanColor(v){v=String(v||"").trim().toLowerCase();return /^(#[0-9a-f]{3,8}|rgba?\([\d.,\s%]+\))$/.test(v)?v:""}
 function cleanNode(src,doc){
@@ -1455,7 +1475,7 @@ function cleanNode(src,doc){
   src.childNodes.forEach(n=>{
     if(n.nodeType===3){out.appendChild(doc.createTextNode(n.nodeValue));return}
     if(n.nodeType!==1)return;
-    let tag=n.tagName.toUpperCase();if(/^(SCRIPT|STYLE|IFRAME|OBJECT|EMBED|TEMPLATE|SVG|MATH|IMG|VIDEO|AUDIO|CANVAS|INPUT|BUTTON|SELECT|TEXTAREA|FORM|META|LINK|TITLE|HEAD|NOSCRIPT)$/.test(tag))return;
+    let tag=n.tagName.toUpperCase();if(/^(SCRIPT|STYLE|IFRAME|OBJECT|EMBED|TEMPLATE|SVG|MATH|VIDEO|AUDIO|CANVAS|INPUT|BUTTON|SELECT|TEXTAREA|FORM|META|LINK|TITLE|HEAD|NOSCRIPT)$/.test(tag))return;
     tag=RENAME[tag]||tag;
     if(!ALLOWED[tag]){out.appendChild(cleanNode(n,doc));return}
     if(tag==="FONT"){const c=cleanColor(n.getAttribute("color"));if(!c){out.appendChild(cleanNode(n,doc));return}const sp=doc.createElement("span");sp.style.color=c;sp.appendChild(cleanNode(n,doc));out.appendChild(sp);return}
@@ -1463,6 +1483,8 @@ function cleanNode(src,doc){
     if(tag==="A"){const h=n.getAttribute("href")||"";if(!/^(https?:|mailto:)/i.test(h)){out.appendChild(cleanNode(n,doc));return}el.setAttribute("href",h);el.setAttribute("target","_blank");el.setAttribute("rel","noopener noreferrer")}
     if(tag==="UL"&&n.classList&&n.classList.contains("checks"))el.className="checks";
     if(tag==="LI"&&n.getAttribute("data-done")==="1")el.setAttribute("data-done","1");
+    if(tag==="IMG"){const src=cleanImgSrc(n.getAttribute("src"));if(!src)return;const im=doc.createElement("img");im.setAttribute("src",src);
+      im.setAttribute("alt",(n.getAttribute("alt")||"Picture").slice(0,200));const w=n.getAttribute("data-w");im.setAttribute("data-w",/^(s|m|l|f)$/.test(w)?w:"l");out.appendChild(im);return}
     if(tag==="SPAN"||tag==="MARK"){const st=n.style||{},c=cleanColor(st.color),b=cleanColor(st.backgroundColor);if(c)el.style.color=c;if(b)el.style.backgroundColor=b}
     el.appendChild(cleanNode(n,doc));
     if(tag==="SPAN"&&!el.getAttribute("style")){out.appendChild(cleanNode(el,doc));return}
@@ -1478,7 +1500,7 @@ function whenText(ts){const d=new Date(ts),now=new Date();const same=d.toDateStr
 function renderNoteList(){
   const q=N($("n-search").value||""),list=sortedNotes().filter(n=>!q||N(noteTitle(n)+" "+noteText(n)).includes(q));
   $("n-list").innerHTML=list.length?list.map(n=>{const txt=noteText(n),t=noteTitle(n),snip=(n.title||"").trim()?txt:txt.slice(t.length).trim();
-    return '<li><button type="button" class="nl-item" data-note="'+esc(n.id)+'"'+(curNote===n.id?' aria-current="true"':'')+'><span class="nl-t">'+(n.pinned?'<span aria-label="Pinned" title="Pinned">📌</span>':'')+esc(t)+'</span>'+(snip?'<span class="nl-s">'+esc(snip.slice(0,160))+'</span>':'')+'<span class="nl-d">'+esc(whenText(n.updated||n.created||Date.now()))+'</span></button></li>'}).join("")
+    return '<li><button type="button" class="nl-item" data-note="'+esc(n.id)+'"'+(curNote===n.id?' aria-current="true"':'')+'><span class="nl-t">'+(n.pinned?'<span aria-label="Pinned" title="Pinned">📌</span>':'')+esc(t)+'</span>'+(snip?'<span class="nl-s">'+esc(snip.slice(0,160))+'</span>':'')+'<span class="nl-d">'+esc(whenText(n.updated||n.created||Date.now()))+(()=>{const c=((n.html||"").match(/<img/g)||[]).length;return c?' · '+c+' picture'+(c===1?'':'s'):''})()+'</span></button></li>'}).join("")
     :'<li class="nl-empty">'+(q?"No notes match “"+esc($("n-search").value)+"”.":"No notes yet. Start one for your game plan, rules or end-of-day review.")+'</li>';
 }
 $("n-search").addEventListener("input",renderNoteList);
@@ -1503,6 +1525,7 @@ $("n-new").addEventListener("click",newNote);$("n-new2").addEventListener("click
 function openNote(id){if(curNote&&curNote!==id)flushNote();curNote=id;showNote();renderNoteList()}
 function showNote(){
   const n=noteById(curNote);$("notes").classList.toggle("editing",!!n);$("n-blank").hidden=!!n;$("n-open").hidden=!n;if(!n)return;
+  selImg=null;$("n-imgbar").hidden=true;
   $("n-title").value=n.title||"";$("n-body").innerHTML=cleanHTML(n.html);wrapLoose($("n-body"));markEmpty();$("n-pin").setAttribute("aria-pressed",String(!!n.pinned));$("n-pin").textContent=n.pinned?"Unpin":"Pin";
   noteMeta(n);$("n-saved").textContent="";noteCount();
 }
@@ -1518,7 +1541,7 @@ function flushNote(){
   saveNoteNow(n).then(()=>{if(curNote===n.id)$("n-saved").textContent="Saved"}).catch(err=>{$("n-saved").textContent="Not saved";toast(errMsg(err))});
 }
 // a note left completely empty is thrown away when you leave it
-function dropIfEmpty(){const n=noteById(curNote);if(n&&!n.title.trim()&&!noteText(n)&&!/<hr|data-done/.test(n.html||"")){notes=notes.filter(x=>x!==n);if(db)db.collection("notes").doc(n.id).delete().catch(()=>{});else persist();return true}return false}
+function dropIfEmpty(){const n=noteById(curNote);if(n&&!n.title.trim()&&!noteText(n)&&!/<hr|<img|data-done/.test(n.html||"")){notes=notes.filter(x=>x!==n);if(db)db.collection("notes").doc(n.id).delete().catch(()=>{});else persist();return true}return false}
 $("n-title").addEventListener("input",noteChanged);
 $("n-title").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();const b=$("n-body");b.focus();placeCaretStart(b)}});
 function placeCaretStart(el){wrapLoose(el);let t=el.firstChild;while(t&&t.nodeType===1&&t.firstChild&&t.tagName!=="BR")t=t.firstChild;
@@ -1557,6 +1580,7 @@ function toggleChecklist(){
 $("n-tb").addEventListener("mousedown",e=>{if(e.target.closest("button"))e.preventDefault()}); // keep the text selected
 $("n-tb").addEventListener("click",e=>{const b=e.target.closest("[data-cmd]");if(!b)return;const c=b.dataset.cmd;
   if(c==="checklist")return toggleChecklist();
+  if(c==="image"){if(!noteById(curNote))return;$("n-file").click();return}
   if(c==="hr")return exec("insertHTML","<hr><p><br></p>");
   if(c==="date")return exec("insertText",new Date().toLocaleDateString("en-US",{weekday:"short",month:"short",day:"numeric",year:"numeric"})+" ");
   if(c==="link"){openLinkBox(savedRange&&!savedRange.collapsed);return}
@@ -1596,9 +1620,63 @@ $("n-body").addEventListener("keydown",e=>{
   if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==="k"){e.preventDefault();openLinkBox(savedRange&&!savedRange.collapsed)}
 });
 $("n-body").addEventListener("paste",e=>{const cd=e.clipboardData;if(!cd)return;e.preventDefault();
+  const pics=[...(cd.files||[])].filter(f=>/^image\//.test(f.type));
+  if(pics.length){addPictures(pics);return} // a screenshot or a copied picture
   const html=cd.getData("text/html");if(html)document.execCommand("insertHTML",false,cleanHTML(html.replace(/<!--[\s\S]*?-->/g,"")));
   else document.execCommand("insertText",false,cd.getData("text/plain"));noteChanged()});
-$("n-body").addEventListener("drop",e=>{if(e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files.length){e.preventDefault();toast("Pictures can't go in notes yet. Add screenshots to a trade instead.")}});
+$("n-body").addEventListener("dragover",e=>{if(e.dataTransfer&&[...(e.dataTransfer.items||[])].some(i=>i.kind==="file")){e.preventDefault();$("n-body").classList.add("drag")}});
+$("n-body").addEventListener("dragleave",()=>$("n-body").classList.remove("drag"));
+$("n-body").addEventListener("drop",e=>{$("n-body").classList.remove("drag");const files=[...(e.dataTransfer&&e.dataTransfer.files||[])];if(!files.length)return;e.preventDefault();
+  const pics=files.filter(f=>/^image\//.test(f.type));if(!pics.length){toast("Only pictures can go in a note (PNG, JPG, GIF or WebP).");return}
+  const r=document.caretRangeFromPoint?document.caretRangeFromPoint(e.clientX,e.clientY):null;if(r&&$("n-body").contains(r.startContainer)){const sel=getSelection();sel.removeAllRanges();sel.addRange(r);savedRange=r.cloneRange()}
+  addPictures(pics)});
+$("n-file").addEventListener("change",e=>{const f=[...e.target.files];e.target.value="";if(f.length)addPictures(f)});
+/* Big screenshots are shrunk to at most 2400px wide before saving. Without the desktop app, pictures are kept inside the
+   note itself, so they're shrunk further to fit in the browser's storage. */
+function loadImg(file){return new Promise((ok,bad)=>{const u=URL.createObjectURL(file),im=new Image();im.onload=()=>ok({im,u});im.onerror=()=>{URL.revokeObjectURL(u);bad(new Error("not a picture"))};im.src=u})}
+async function preparePicture(file){
+  const {im,u}=await loadImg(file);const inline=!assets,max=inline?1400:2400;
+  try{if(file.type==="image/gif"&&!inline&&file.size<8e6)return {blob:file,name:file.name||"picture.gif",w:im.naturalWidth};
+    const scale=Math.min(1,max/Math.max(im.naturalWidth,1));
+    if(scale===1&&!inline&&file.size<4e6&&/png|jpe?g|webp/.test(file.type))return {blob:file,name:file.name||"picture.png",w:im.naturalWidth};
+    const c=document.createElement("canvas");c.width=Math.round(im.naturalWidth*scale);c.height=Math.round(im.naturalHeight*scale);c.getContext("2d").drawImage(im,0,0,c.width,c.height);
+    const png=file.type==="image/png"&&!inline&&c.width*c.height<6e6,type=png?"image/png":"image/jpeg";
+    const blob=await new Promise(r=>c.toBlob(r,type,0.88));return {blob,name:(png?"picture.png":"picture.jpg"),w:c.width}}
+  finally{URL.revokeObjectURL(u)}}
+function blobToDataURL(b){return new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result);fr.readAsDataURL(b)})}
+async function addPictures(files){
+  if(!noteById(curNote))return;files=files.slice(0,10);
+  toast(files.length>1?"Adding "+files.length+" pictures…":"Adding picture…");let added=0;
+  for(const f of files){
+    try{const p=await preparePicture(f);let src;
+      if(assets){const r=await assets.upload(new File([p.blob],p.name,{type:p.blob.type}));src=cleanImgSrc(r.url||("/_blob/"+r.id))}
+      else{src=await blobToDataURL(p.blob);if(src.length>1.5e6){toast("That picture is too big to keep in a browser note. Use the PropBook app for big screenshots.");continue}}
+      if(!src)throw new Error("bad");
+      const size=p.w<300?"s":p.w<600?"m":"l";
+      restoreSel();document.execCommand("insertHTML",false,'<img src="'+esc(src)+'" alt="'+esc((f.name&&!/^image\.(png|jpe?g)$/i.test(f.name)?f.name.replace(/\.[a-z]+$/i,""):"Picture").slice(0,120))+'" data-w="'+size+'"><p><br></p>');
+      const sel=getSelection();if(sel.rangeCount&&$("n-body").contains(sel.anchorNode))savedRange=sel.getRangeAt(0).cloneRange();added++;noteChanged();
+    }catch(err){toast("Couldn't add that picture. PNG, JPG, GIF and WebP work.")}
+  }
+  if(added)toast(added>1?added+" pictures added":"Picture added")}
+/* picking a picture: size buttons, view full size, remove */
+let selImg=null;
+function placeImgBar(){const bar=$("n-imgbar");if(!selImg||!$("n-body").contains(selImg)){bar.hidden=true;if(selImg)selImg.classList.remove("sel");selImg=null;return}
+  const box=$("n-open").getBoundingClientRect(),r=selImg.getBoundingClientRect();bar.hidden=false;
+  bar.style.left=Math.max(8,Math.min(r.left-box.left,box.width-bar.offsetWidth-8))+"px";bar.style.top=Math.max(4,r.top-box.top-bar.offsetHeight-6)+"px";
+  bar.querySelectorAll("[data-iw]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.iw===(selImg.dataset.w||"l"))))}
+function selectImg(im){if(selImg&&selImg!==im)selImg.classList.remove("sel");selImg=im;if(im){im.classList.add("sel");const r=document.createRange();r.selectNode(im);const s2=getSelection();s2.removeAllRanges();s2.addRange(r);savedRange=r.cloneRange()}placeImgBar()}
+$("n-body").addEventListener("click",e=>{const im=e.target.closest("img");if(im){e.preventDefault();selectImg(im)}else if(selImg)selectImg(null)});
+$("n-body").addEventListener("dblclick",e=>{const im=e.target.closest("img");if(im)viewImg(im)});
+$("n-body").addEventListener("scroll",placeImgBar);window.addEventListener("resize",placeImgBar);
+$("n-body").addEventListener("keydown",e=>{if(!selImg)return;if(e.key==="Delete"||e.key==="Backspace"){e.preventDefault();removeImg()}else if(!["Shift","Control","Meta","Alt"].includes(e.key))selectImg(null)});
+$("n-imgbar").addEventListener("mousedown",e=>e.preventDefault());
+$("n-imgbar").addEventListener("click",e=>{const b=e.target.closest("button");if(!b||!selImg)return;
+  if(b.dataset.iw){selImg.dataset.w=b.dataset.iw;noteChanged();requestAnimationFrame(placeImgBar)}
+  else if(b.dataset.ia==="view")viewImg(selImg);else if(b.dataset.ia==="del")removeImg()});
+function removeImg(){const im=selImg;if(!im)return;const r=document.createRange();r.selectNode(im);const s2=getSelection();s2.removeAllRanges();s2.addRange(r);
+  document.execCommand("delete");if(im.isConnected)im.remove();im.classList.remove("sel");selImg=null;placeImgBar();noteChanged();toast("Picture removed. Ctrl+Z brings it back.")}
+function viewImg(im){$("iv-img").src=im.getAttribute("src");$("iv-img").alt=im.alt||"Picture";openOv("ov-img")}
+$("ov-img").addEventListener("click",e=>{if(e.target.id==="ov-img"||e.target.id==="iv-img")closeOv("ov-img")});
 $("n-body").addEventListener("click",e=>{const a=e.target.closest("a[href]");if(a&&(e.ctrlKey||e.metaKey)){e.preventDefault();window.open(a.href,"_blank","noopener")}});
 window.addEventListener("beforeunload",()=>flushNote());
 document.addEventListener("keydown",e=>{if(curView==="notes"&&(e.ctrlKey||e.metaKey)&&e.altKey&&e.key.toLowerCase()==="n"){e.preventDefault();newNote()}});
