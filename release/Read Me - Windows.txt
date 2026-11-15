@@ -38,6 +38,18 @@ SETUPS
   never use, and save combinations you use often (one click picks all of
   their setups). "P&L by setup" shows each setup, or each combination.
 
+NOTES
+  Switch between "Journal" and "Notes" at the top of PropBook. Notes is a
+  notepad for game plans, rules, end-of-day reviews or anything else. Click
+  "+ New note", give it a title, and write. The toolbar has headings,
+  bold, italic, underline, strikethrough, text color, highlight, checkbox
+  lists, bulleted and numbered lists, indents, a divider line, today's date
+  and links. Click a checkbox to tick it. Notes save as you type, and are
+  kept in your journal file with everything else. Pin a note to keep it at
+  the top of the list, and use the search box to find one.
+  Shortcuts: Ctrl+B bold, Ctrl+I italic, Ctrl+U underline, Ctrl+K link,
+  Tab / Shift+Tab to indent a list item, Ctrl+Enter to tick a checkbox.
+
 RISK : REWARD
   Each trade has a Target price, a Risk ($) and a Planned risk : reward.
   Fill in your entry, stop and target, and PropBook works out the risk and

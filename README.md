@@ -15,6 +15,7 @@ is sent to a server.
   `TradesCSV` folder and they're picked up automatically.
 - **PropBook Sync**, a Chrome/Brave extension. It reads balances, limits and trade history
   from prop firm dashboards while you look at them, then sends them to the app.
+- **Notes**: a notepad with headings, bold, italic, colors, highlights, checkbox lists and links. Saves as you type, with search and pinning.
 - **Light and dark mode.**
 - **Automatic updates** for both the app and the extension.
 
