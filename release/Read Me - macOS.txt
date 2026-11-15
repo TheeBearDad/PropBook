@@ -72,6 +72,12 @@ NEWS
     browser. Data headlines like "Actual 0.4% (Forecast 0.3%)" get a green
     or red tag. "Sources" lets you turn sites on or off, add any site's RSS
     feed, and see which ones didn't load.
+    Stories a source marks as market moving (like FinancialJuice's red
+    ones) show in red, with the source's tags (USD, US Indexes...) and
+    any chart picture that comes with the story. Click a picture to see it
+    full size. "Market moving only" shows just those. In Sources you can
+    add your own highlight words (for example "intervention, Powell"), and
+    headlines that mention them turn red too.
   - Red Folder: this week's economic calendar from ForexFactory for the US,
     Europe, the UK, Japan, Canada, China, Australia, New Zealand and
     Switzerland, with forecast and previous values and a countdown to the

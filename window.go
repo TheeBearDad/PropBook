@@ -124,3 +124,69 @@ func (w *appWindow) close() {
 		}
 	}
 }
+
+// shutDown closes the journal window for good before an update starts the new version. If the old window were
+// still around, the new version's window would join it (same window profile) and you'd see two.
+func (w *appWindow) shutDown() {
+	var pid uint32
+	if w != nil && w.cmd != nil && w.cmd.Process != nil {
+		pid = uint32(w.cmd.Process.Pid)
+	}
+	owners := closeJournalWindows(pid) // Windows: ask nicely first
+	deadline := time.Now().Add(4 * time.Second)
+	for time.Now().Before(deadline) {
+		alive := false
+		if w != nil && w.done != nil {
+			select {
+			case <-w.done:
+			default:
+				alive = true
+			}
+		}
+		if !alive && !anyJournalWindow(pid) {
+			break
+		}
+		time.Sleep(150 * time.Millisecond)
+	}
+	w.close() // whatever is left of the process PropBook started
+	killTree(pid)
+	for _, o := range owners { // and any browser process the window was handed to
+		if o != pid {
+			killTree(o)
+		}
+	}
+	waitProfileFree(6 * time.Second)
+}
+
+// waitProfileFree waits until no browser is using PropBook's window profile, so the next window opens fresh.
+func waitProfileFree(max time.Duration) {
+	dir := windowProfileDir()
+	deadline := time.Now().Add(max)
+	for time.Now().Before(deadline) {
+		if runtime.GOOS == "windows" {
+			// Chromium keeps "lockfile" open while running; it can only be deleted once the browser has exited.
+			if err := os.Remove(filepath.Join(dir, "lockfile")); err == nil || os.IsNotExist(err) {
+				return
+			}
+		} else if _, err := os.Lstat(filepath.Join(dir, "SingletonLock")); os.IsNotExist(err) {
+			return
+		}
+		time.Sleep(200 * time.Millisecond)
+	}
+}
+
+// closeLeftoverWindows runs in a freshly updated PropBook. Older versions could leave their window open when they
+// restarted; close it so the new window doesn't open beside it.
+func closeLeftoverWindows() {
+	owners := closeJournalWindows(0)
+	if len(owners) > 0 {
+		deadline := time.Now().Add(3 * time.Second)
+		for time.Now().Before(deadline) && anyJournalWindow(0) {
+			time.Sleep(150 * time.Millisecond)
+		}
+		for _, o := range owners {
+			killTree(o)
+		}
+	}
+	waitProfileFree(8 * time.Second)
+}

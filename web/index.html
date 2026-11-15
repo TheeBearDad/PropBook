@@ -292,6 +292,18 @@ input.nw-in[type=search]{width:220px}
 .up{color:var(--win)}.down{color:var(--loss)}.flat{color:var(--muted)}
 .dchip.up{border-color:color-mix(in srgb,var(--win) 55%,transparent);background:color-mix(in srgb,var(--win) 10%,transparent)}
 .dchip.down{border-color:color-mix(in srgb,var(--loss) 55%,transparent);background:color-mix(in srgb,var(--loss) 10%,transparent)}
+.nw-it .s{white-space:pre-line}.nw-it .s.list{-webkit-line-clamp:8}
+.nw-it.hot{background:#b80000;border-radius:8px;padding:10px 12px;margin:4px 0;border-bottom:0;grid-template-columns:52px minmax(0,1fr)}
+.nw-it.hot .t,.nw-it.hot .h,.nw-it.hot .s,.nw-it.hot .m{color:#fff}.nw-it.hot .s{opacity:.92}
+.nw-it.hot .srcb,.nw-it.hot .tag{border-color:rgba(255,255,255,.45);color:#ffd9d9;background:rgba(0,0,0,.12)}
+.nw-it.hot .dchip{color:#fff;border-color:rgba(255,255,255,.5);background:rgba(0,0,0,.15)}.nw-it.hot .dchip.up,.nw-it.hot .dchip.down{color:#fff}
+.nw-it.hot .h:focus-visible{outline-color:#fff}
+.nw-it .tag{border:1px solid var(--line);border-radius:5px;padding:0 6px;font-size:11px;color:var(--muted);background:var(--panel-2);white-space:nowrap}
+.nw-it .hotlab{font-size:10.5px;font-weight:800;letter-spacing:.07em;color:#fff;background:rgba(0,0,0,.25);border-radius:4px;padding:1px 6px}
+.nw-pic{all:unset;cursor:zoom-in;display:block;max-width:min(720px,100%);margin-top:6px}
+.nw-pic img{display:block;max-width:100%;max-height:420px;border-radius:7px;border:1px solid var(--line-2);background:var(--panel-2)}
+.nw-it.hot .nw-pic img{border-color:rgba(255,255,255,.55)}
+.nw-pic:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:7px}
 .nw-empty{padding:40px 10px;text-align:center;color:var(--muted)}
 .cal-legend{margin:0}
 .cal-next{border:1px solid var(--line-2);border-radius:9px;padding:9px 12px;background:var(--panel-2);font-size:13.5px}
@@ -562,6 +574,7 @@ td.pt{color:color-mix(in srgb,var(--win) 75%,var(--muted))}td.lt{color:color-mix
         <span class="grow"></span>
         <input type="search" class="nw-in" id="nw-q" placeholder="Search headlines" aria-label="Search headlines" autocomplete="off">
         <select class="nw-in" id="nw-src" aria-label="Show source"><option value="">All sources</option></select>
+        <select class="nw-in" id="nw-hot" aria-label="Which headlines"><option value="">All headlines</option><option value="1">Market moving only</option></select>
         <select class="nw-in" id="nw-auto" aria-label="Check for new headlines"><option value="0">Auto-check: off</option><option value="5">Every 5 min</option><option value="15">Every 15 min</option><option value="30">Every 30 min</option></select>
         <button class="btn sm" type="button" id="nw-sources">Sources</button>
       </div>
@@ -630,6 +643,7 @@ td.pt{color:color-mix(in srgb,var(--win) 75%,var(--muted))}td.lt{color:color-mix
     <div class="sheet-head"><h3 id="src-title">News sources</h3><button class="x" type="button" data-close aria-label="Close">×</button></div>
     <p class="note" style="margin:0">PropBook reads the public news feeds (RSS) these sites publish. Untick a source to hide it, or add any site's RSS feed address.</p>
     <ul class="src-list" id="src-list"></ul>
+    <div class="field"><label for="src-hot">Highlight in red when a headline mentions</label><input id="src-hot" placeholder="e.g. breaking, intervention, Powell" autocomplete="off" spellcheck="false"><span class="hint">Headlines a source marks as market moving (like FinancialJuice's red ones) are always red. These words add your own. Separate them with commas.</span></div>
     <form class="src-add" id="src-add" novalidate>
       <div class="field"><label for="src-name">Name</label><input id="src-name" placeholder="e.g. Seeking Alpha" maxlength="40" autocomplete="off"></div>
       <div class="field" style="flex:2"><label for="src-url">Feed address</label><input id="src-url" type="url" placeholder="https://…/rss" autocomplete="off" spellcheck="false"></div>
@@ -921,7 +935,7 @@ function mergeSettings(s){
   o.ignored=Array.isArray(s.ignored)?s.ignored:[];
   const up=s.updates||{};o.updates={auto:!!up.auto,skip:typeof up.skip==="string"?up.skip:""};
   const nw=s.news||{};o.news={off:Array.isArray(nw.off)?nw.off:defaultOffFeeds(),custom:Array.isArray(nw.custom)?nw.custom.filter(f=>f&&f.url):[],
-    auto:[0,5,15,30].includes(+nw.auto)?+nw.auto:0,mode:nw.mode==="usd"?"usd":"stocks",impact:["high","med","all"].includes(nw.impact)?nw.impact:"med",
+    auto:[0,5,15,30].includes(+nw.auto)?+nw.auto:0,hotWords:typeof nw.hotWords==="string"?nw.hotWords:"breaking, intervention, emergency, unscheduled",mode:nw.mode==="usd"?"usd":"stocks",impact:["high","med","all"].includes(nw.impact)?nw.impact:"med",
     curs:Array.isArray(nw.curs)?nw.curs.filter(c=>typeof c==="string"&&/^[A-Z]{3}$/.test(c)):calCurs(),scheme:nw.scheme==="ff"?"ff":"us",
     ovr:nw.ovr&&typeof nw.ovr==="object"&&!Array.isArray(nw.ovr)?nw.ovr:{}};
   return o;
@@ -1748,10 +1762,11 @@ async function loadNews(force,quiet){
 $("nw-refresh").addEventListener("click",()=>loadNews(true));
 function scheduleNews(){clearInterval(newsTimer);const m=settings.news.auto;if(m&&DESK)newsTimer=setInterval(()=>loadNews(false,true),m*60000)}
 $("nw-auto").addEventListener("change",e=>{settings.news.auto=+e.target.value;Store.saveSettings().catch(()=>{});scheduleNews();toast(settings.news.auto?"PropBook will check for new headlines every "+settings.news.auto+" minutes while it's open.":"Auto-check is off. Use Refresh when you want new headlines.")});
-$("nw-q").addEventListener("input",()=>renderNews());$("nw-src").addEventListener("change",()=>renderNews());
+$("nw-q").addEventListener("input",()=>renderNews());$("nw-src").addEventListener("change",()=>renderNews());$("nw-hot").addEventListener("change",()=>renderNews());
+$("nw-list").addEventListener("click",e=>{const b=e.target.closest("[data-pic]");if(!b)return;$("iv-img").src=b.dataset.pic;$("iv-img").alt="Picture from the news story";openOv("ov-img")});
 
 /* "Actual 0.4% (Forecast 0.3%, Previous 0.2%)" in a headline (FinancialJuice style) */
-const DATA_RE=/\bActual:?\s*([-+]?[\d.,]+\s*[%KMBT]?)\s*(?:\(|,|\s)\s*(?:Forecast|Consensus|Expected|Est\.?):?\s*([-+]?[\d.,]+\s*[%KMBT]?)(?:\s*,\s*Previous:?\s*([-+]?[\d.,]+\s*[%KMBT]?))?\)?/i;
+const DATA_RE=/\bActual:?\s*([-+]?\d[\d.,]*\s*[%KMBT]?)\s*(?:\(|,|\s)\s*(?:Forecast|Consensus|Expected|Est\.?):?\s*([-+]?\d[\d.,]*\s*[%KMBT]?|-|n\/a)(?:\s*,\s*Previous:?\s*([-+]?\d[\d.,]*\s*[%KMBT]?))?\)?/i;
 function numVal(v){if(v==null)return null;v=String(v).replace(/,/g,"").replace(/[<>]/g,"").trim();const m=v.match(/^([-+]?\d*\.?\d+)\s*(%|K|M|B|T)?$/i);if(!m)return null;const mult={K:1e3,M:1e6,B:1e9,T:1e12}[(m[2]||"").toUpperCase()]||1;return +m[1]*mult}
 /* Does a higher number help or hurt? Returns +1 (higher is good), -1 (higher is bad) or 0 (no clear read). */
 function directionFor(title,mode){
@@ -1765,20 +1780,25 @@ function directionFor(title,mode){
 function surprise(actual,forecast,previous,title,mode){
   const a=numVal(actual),f=numVal(forecast),p=numVal(previous);const ref=f!=null?f:p;
   if(a==null||ref==null)return {cls:"",word:""};
-  if(a===ref)return {cls:"flat",word:"as expected"};
+  if(a===ref)return {cls:"flat",word:f!=null?"as expected":"same as previous"};
   const higher=a>ref,dir=directionFor(title,mode);
   const word=(higher?"above ":"below ")+(f!=null?"forecast":"previous");
   if(!dir)return {cls:"flat",word};
   return {cls:(higher===(dir>0))?"up":"down",word}}
 function dataChips(title){const m=title.match(DATA_RE);if(!m)return "";const s=surprise(m[1],m[2],m[3],title,settings.news.mode);
-  return '<div class="dchips"><span class="dchip '+s.cls+'" title="'+esc(s.word)+'">Actual <b>'+esc(m[1])+'</b>'+(s.word?' · '+esc(s.word):'')+'</span><span class="dchip">Forecast '+esc(m[2])+'</span>'+(m[3]?'<span class="dchip">Previous '+esc(m[3])+'</span>':'')+'</div>'}
+  const noF=!/\d/.test(m[2]);
+  return '<div class="dchips"><span class="dchip '+s.cls+'" title="'+esc(s.word)+'">Actual <b>'+esc(m[1])+'</b>'+(s.word?' · '+esc(s.word):'')+'</span>'+(noF?'':'<span class="dchip">Forecast '+esc(m[2])+'</span>')+(m[3]?'<span class="dchip">Previous '+esc(m[3])+'</span>':'')+'</div>'}
+function hotWordList(){return (settings.news.hotWords||"").split(",").map(w=>w.trim().toLowerCase()).filter(w=>w.length>1)}
+function hotWordHit(i){const t=(i.title||"").toLowerCase();return hotWordList().find(w=>new RegExp("(^|[^a-z0-9])"+w.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+"($|[^a-z0-9])").test(t))||""}
+function isHotItem(i){return !!i.hot||!!hotWordHit(i)}
 function dayLabel(ms){const d=new Date(ms),t=new Date();const k=x=>x.toDateString();const y=new Date(t);y.setDate(t.getDate()-1);
   if(k(d)===k(t))return "Today";if(k(d)===k(y))return "Yesterday";return d.toLocaleDateString("en-US",{weekday:"long",month:"short",day:"numeric"})}
 function renderNews(){
   const srcSel=$("nw-src"),cur=srcSel.value;const ids=[...new Set(newsItems.map(i=>i.feed))];
   srcSel.innerHTML='<option value="">All sources</option>'+activeFeeds().filter(f=>ids.includes(f.id)).map(f=>'<option value="'+esc(f.id)+'">'+esc(f.name)+'</option>').join("");srcSel.value=ids.includes(cur)?cur:"";
   const q=N($("nw-q").value||""),src=srcSel.value,seen=seenAt();
-  const list=newsItems.filter(i=>(!src||i.feed===src)&&(!q||N(i.title+" "+(i.summary||"")+" "+feedName(i.feed)).includes(q)));
+  const hotOnly=$("nw-hot").value==="1";
+  const list=newsItems.filter(i=>(!src||i.feed===src)&&(!hotOnly||isHotItem(i))&&(!q||N(i.title+" "+(i.summary||"")+" "+(i.tags||[]).join(" ")+" "+feedName(i.feed)).includes(q)));
   const bad=Object.entries(newsFeedStatus).filter(([id,v])=>v.error&&activeFeeds().some(f=>f.id===id));
   $("nw-status").innerHTML=newsAt?("Updated "+esc(ago(newsAt))+" · "+newsItems.length+" headlines"+(bad.length?' · <button type="button" class="linkish" id="nw-bad">'+bad.length+" source"+(bad.length===1?"":"s")+" didn't load</button>":"")):"";
   const nb=$("nw-bad");if(nb)nb.onclick=()=>openSources();
@@ -1788,10 +1808,12 @@ function renderNews(){
   let html="",last="";
   list.slice(0,400).forEach(i=>{const lab=i.time?dayLabel(i.time):"Undated";if(lab!==last){html+='<div class="nw-day">'+esc(lab)+'</div>';last=lab}
     const tm=i.time?new Date(i.time).toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"}):"";
-    html+='<article class="nw-it'+(seen&&i.time>seen?' is-new':'')+'"><span class="t">'+esc(tm)+'</span><div style="display:flex;flex-direction:column;gap:3px;min-width:0">'+
+    const hot=isHotItem(i),tags=(i.tags||[]).filter(t=>!/^market[ -]?moving$/i.test(t));
+    html+='<article class="nw-it'+(seen&&i.time>seen?' is-new':'')+(hot?' hot':'')+'"'+(hot?' aria-label="'+(i.hot?"Market moving":"Highlighted")+': '+esc(i.title)+'"':'')+'><span class="t">'+esc(tm)+'</span><div style="display:flex;flex-direction:column;gap:3px;min-width:0">'+
       '<button type="button" class="h" data-site="'+esc(i.link)+'" title="Open in your browser">'+esc(i.title)+'</button>'+dataChips(i.title)+
-      (i.summary?'<span class="s">'+esc(i.summary)+'</span>':'')+
-      '<span class="m"><span class="srcb">'+esc(feedName(i.feed))+'</span>'+(i.source&&i.source!==feedName(i.feed)?esc(i.source):'')+'</span></div></article>'});
+      (i.summary?'<span class="s'+(i.summary.includes("\n")?' list':'')+'">'+esc(i.summary)+'</span>':'')+
+      (i.image&&/^https?:\/\//.test(i.image)?'<button type="button" class="nw-pic" data-pic="'+esc(i.image)+'" aria-label="View picture full size"><img src="'+esc(i.image)+'" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentNode.remove()"></button>':'')+
+      '<span class="m">'+(i.hot?'<span class="hotlab">MARKET MOVING</span>':hot?'<span class="hotlab" title="Matches one of your highlight words (News → Sources)">WATCH: '+esc(hotWordHit(i).toUpperCase())+'</span>':'')+'<span class="srcb">'+esc(feedName(i.feed))+'</span>'+tags.map(t=>'<span class="tag">'+esc(t)+'</span>').join("")+(i.source&&i.source!==feedName(i.feed)?esc(i.source):'')+'</span></div></article>'});
   $("nw-list").innerHTML=html;
 }
 $("nw-newpill").addEventListener("click",()=>{setSeen(newsItems.reduce((m,i)=>Math.max(m,i.time||0),0));renderNews()});
@@ -1799,7 +1821,8 @@ $("nw-newpill").addEventListener("click",()=>{setSeen(newsItems.reduce((m,i)=>Ma
 function markSeenIfFirst(){if(!seenAt()&&newsItems.length)setSeen(newsItems.reduce((m,i)=>Math.max(m,i.time||0),0))}
 
 /* sources dialog */
-function openSources(){renderSources();openOv("ov-src")}
+function openSources(){renderSources();$("src-hot").value=settings.news.hotWords;openOv("ov-src")}
+$("src-hot").addEventListener("change",e=>{settings.news.hotWords=e.target.value;Store.saveSettings().catch(()=>{});renderNews()});
 $("nw-sources").addEventListener("click",openSources);
 function renderSources(){
   $("src-list").innerHTML=allFeeds().map(f=>{const st=newsFeedStatus[f.id],on=!settings.news.off.includes(f.id);
@@ -1918,8 +1941,11 @@ function updPost(path){clearTimeout(updTimer);return api(path,{method:"POST"}).t
 function installNow(){updAsked=true;updPost("/api/update/install")}
 function openReleases(){api("/api/open?dir=release").catch(()=>{});toast("Opening the download page in your browser…")}
 function btnH(id,label,cls){return '<button class="btn sm'+(cls?" "+cls:"")+'" type="button" data-upd="'+id+'">'+label+'</button>'}
+let updClosing=false;
 function showUpd(st){
-  updSt=st;const b=$("upd"),skip=settings.updates.skip,busy=UPD_BUSY.includes(st.phase)&&st.phase!=="checking";
+  updSt=st;
+  // the new version opens its own window; close this one (the app closes it too, this is the backup)
+  if(st.phase==="restarting"&&DESK&&!updClosing){updClosing=true;setTimeout(()=>{try{window.close()}catch(e){}},700)}const b=$("upd"),skip=settings.updates.skip,busy=UPD_BUSY.includes(st.phase)&&st.phase!=="checking";
   const failed=st.phase==="error"&&updAsked&&/^Couldn't update/.test(st.error||"");
   let title="",sub="",act="",bad=false;
   if(busy){title='<span class="spin" aria-hidden="true"></span>'+({downloading:"Downloading PropBook "+st.latest+"…",installing:"Installing PropBook "+st.latest+"…",restarting:"Restarting into PropBook "+st.latest+"…"})[st.phase];

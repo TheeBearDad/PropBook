@@ -8,9 +8,12 @@ package main
 
 import (
 	"os"
+	"os/exec"
 	"path/filepath"
 	"runtime"
+	"strconv"
 	"strings"
+	"sync"
 	"syscall"
 	"time"
 	"unsafe"
@@ -31,6 +34,7 @@ var (
 	pGetWindow                = user32.NewProc("GetWindow")
 	pSendMessageW             = user32.NewProc("SendMessageW")
 	pIsWindow                 = user32.NewProc("IsWindow")
+	pPostMessageW             = user32.NewProc("PostMessageW")
 
 	pSHGetPropertyStoreForWindow             = shell32.NewProc("SHGetPropertyStoreForWindow")
 	pExtractIconExW                          = shell32.NewProc("ExtractIconExW")
@@ -76,6 +80,7 @@ var (
 const (
 	vtLPWSTR  = 31
 	wmSetIcon = 0x0080
+	wmClose   = 0x0010
 	iconSmall = 0
 	iconBig   = 1
 	gwOwner   = 4
@@ -150,11 +155,13 @@ func loadIcons(exe string) (uintptr, uintptr) {
 
 // findJournalWindow returns the visible top-level browser window that belongs to the browser
 // process PropBook started, or failing that, one titled exactly "PropBook".
-// Only the brandWindow goroutine calls it, so the shared search state needs no lock.
+// enumMu guards the shared search state: the window search runs from the branding loop and when updating.
 var (
+	enumMu       sync.Mutex
 	findPid      uint32
 	foundByPid   uintptr
 	foundByTitle uintptr
+	foundAll     []uintptr
 	enumCallback = syscall.NewCallback(enumProc) // made once: Windows callbacks are never freed
 )
 
@@ -169,19 +176,60 @@ func enumProc(h, _ uintptr) uintptr {
 	}
 	var wp uint32
 	pGetWindowThreadProcessId.Call(h, uintptr(unsafe.Pointer(&wp)))
-	if wp == findPid && foundByPid == 0 {
-		foundByPid = h
-	}
 	t := make([]uint16, 128)
 	pGetWindowTextW.Call(h, uintptr(unsafe.Pointer(&t[0])), 128)
-	if syscall.UTF16ToString(t) == "PropBook" && foundByTitle == 0 {
+	byPid, byTitle := wp == findPid && findPid != 0, syscall.UTF16ToString(t) == "PropBook"
+	if byPid && foundByPid == 0 {
+		foundByPid = h
+	}
+	if byTitle && foundByTitle == 0 {
 		foundByTitle = h
+	}
+	if byPid || byTitle {
+		foundAll = append(foundAll, h)
 	}
 	return 1
 }
 
+// journalWindows lists every open PropBook window: the one PropBook's browser process owns, and any the browser
+// handed to another of its processes (Edge often does this right after starting).
+func journalWindows(pid uint32) []uintptr {
+	enumMu.Lock()
+	defer enumMu.Unlock()
+	findPid, foundByPid, foundByTitle, foundAll = pid, 0, 0, nil
+	pEnumWindows.Call(enumCallback, 0)
+	return append([]uintptr(nil), foundAll...)
+}
+
+// closeJournalWindows asks each PropBook window to close the normal way, as if its X were clicked, and returns
+// the browser processes that own them so they can be stopped if they don't.
+func closeJournalWindows(pid uint32) []uint32 {
+	var owners []uint32
+	for _, h := range journalWindows(pid) {
+		var wp uint32
+		pGetWindowThreadProcessId.Call(h, uintptr(unsafe.Pointer(&wp)))
+		owners = append(owners, wp)
+		pPostMessageW.Call(h, wmClose, 0, 0)
+	}
+	return owners
+}
+
+func anyJournalWindow(pid uint32) bool { return len(journalWindows(pid)) > 0 }
+
+// killTree stops a browser process and all of its helper processes.
+func killTree(pid uint32) {
+	if pid == 0 {
+		return
+	}
+	c := exec.Command("taskkill", "/T", "/F", "/PID", strconv.Itoa(int(pid)))
+	c.SysProcAttr = &syscall.SysProcAttr{HideWindow: true, CreationFlags: 0x08000000} // no console window
+	c.Run()
+}
+
 func findJournalWindow(pid uint32) uintptr {
-	findPid, foundByPid, foundByTitle = pid, 0, 0
+	enumMu.Lock()
+	defer enumMu.Unlock()
+	findPid, foundByPid, foundByTitle, foundAll = pid, 0, 0, nil
 	pEnumWindows.Call(enumCallback, 0)
 	if foundByPid != 0 {
 		return foundByPid

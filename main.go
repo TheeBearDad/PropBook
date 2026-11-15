@@ -152,6 +152,9 @@ func main() {
 	}
 
 	start := time.Now()
+	if upd.UpdatedFrom != "" { // just updated: make sure the old version's window has fully gone first
+		closeLeftoverWindows()
+	}
 	win, ok := openWindow(url)
 	if !ok {
 		fatal("Couldn't open the journal window. Install Google Chrome, Microsoft Edge or Brave, then open PropBook again.")
@@ -172,7 +175,7 @@ func main() {
 			}
 			done = nil // browser handed off to an existing process; rely on page signals
 		case cmd := <-restartCh:
-			win.close()
+			win.shutDown()
 			relaunch(cmd)
 			return
 		case <-tick.C:

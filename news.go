@@ -30,13 +30,16 @@ import (
 )
 
 type newsItem struct {
-	ID      string `json:"id"`
-	Feed    string `json:"feed"`
-	Source  string `json:"source"`
-	Title   string `json:"title"`
-	Link    string `json:"link"`
-	Summary string `json:"summary,omitempty"`
-	Time    int64  `json:"time"` // unix ms; 0 when the feed gave no date
+	ID      string   `json:"id"`
+	Feed    string   `json:"feed"`
+	Source  string   `json:"source"`
+	Title   string   `json:"title"`
+	Link    string   `json:"link"`
+	Summary string   `json:"summary,omitempty"`
+	Time    int64    `json:"time"`           // unix ms; 0 when the feed gave no date
+	Tags    []string `json:"tags,omitempty"` // the feed's own categories, e.g. "US Indexes", "USD", "Market Moving"
+	Image   string   `json:"image,omitempty"`
+	Hot     bool     `json:"hot,omitempty"` // the source marked it market moving / breaking
 }
 
 type feedResult struct {
@@ -79,14 +82,27 @@ type rssDoc struct {
 }
 
 type rssItem struct {
-	Title       string `xml:"title"`
-	Link        string `xml:"link"`
-	GUID        string `xml:"guid"`
-	Description string `xml:"description"`
-	Content     string `xml:"http://purl.org/rss/1.0/modules/content/ encoded"`
-	PubDate     string `xml:"pubDate"`
-	DCDate      string `xml:"http://purl.org/dc/elements/1.1/ date"`
-	Source      string `xml:"source"`
+	Title       string     `xml:"title"`
+	Link        string     `xml:"link"`
+	GUID        string     `xml:"guid"`
+	Description string     `xml:"description"`
+	Content     string     `xml:"http://purl.org/rss/1.0/modules/content/ encoded"`
+	PubDate     string     `xml:"pubDate"`
+	DCDate      string     `xml:"http://purl.org/dc/elements/1.1/ date"`
+	Source      string     `xml:"source"`
+	Categories  []string   `xml:"category"`
+	Enclosures  []mediaRef `xml:"enclosure"`
+	Media       []mediaRef `xml:"http://search.yahoo.com/mrss/ content"`
+	Thumbs      []mediaRef `xml:"http://search.yahoo.com/mrss/ thumbnail"`
+	Groups      []struct {
+		Media []mediaRef `xml:"http://search.yahoo.com/mrss/ content"`
+	} `xml:"http://search.yahoo.com/mrss/ group"`
+}
+
+type mediaRef struct {
+	URL    string `xml:"url,attr"`
+	Type   string `xml:"type,attr"`
+	Medium string `xml:"medium,attr"`
 }
 
 type atomEntry struct {
@@ -95,11 +111,16 @@ type atomEntry struct {
 		Href string `xml:"href,attr"`
 		Rel  string `xml:"rel,attr"`
 	} `xml:"link"`
-	ID        string `xml:"id"`
-	Summary   string `xml:"summary"`
-	Content   string `xml:"content"`
-	Updated   string `xml:"updated"`
-	Published string `xml:"published"`
+	ID         string `xml:"id"`
+	Summary    string `xml:"summary"`
+	Content    string `xml:"content"`
+	Updated    string `xml:"updated"`
+	Published  string `xml:"published"`
+	Categories []struct {
+		Term  string `xml:"term,attr"`
+		Label string `xml:"label,attr"`
+	} `xml:"category"`
+	Thumbs []mediaRef `xml:"http://search.yahoo.com/mrss/ thumbnail"`
 }
 
 var (
@@ -189,17 +210,37 @@ func parseFeed(body []byte, feedID string) (string, []newsItem, error) {
 	}
 	var out []newsItem
 	title := plainText(doc.Channel.Title, 80)
-	add := func(t, link, summary string, when int64, src string) {
-		t = plainText(t, 300)
+	add := func(rawTitle, link, summary string, when int64, src string, tags []string, img string) {
+		// a headline can run over several lines (FinancialJuice's "MOC Imbalance" lists): the first line is the
+		// headline, the rest goes above the summary, line by line
+		lines := []string{}
+		for _, l := range strings.Split(html.UnescapeString(tagRe.ReplaceAllString(strings.ReplaceAll(rawTitle, "<br", "\n<br"), "")), "\n") {
+			if l = plainText(l, 300); l != "" {
+				lines = append(lines, l)
+			}
+		}
 		link = safeLink(link)
-		if t == "" || link == "" {
+		if len(lines) == 0 || link == "" {
 			return
 		}
+		t := lines[0]
 		s := plainText(summary, 420)
-		if strings.EqualFold(s, t) {
+		if strings.EqualFold(s, t) || strings.EqualFold(s, strings.Join(lines, " ")) {
 			s = ""
 		}
-		out = append(out, newsItem{ID: itemID(link, t), Feed: feedID, Source: src, Title: t, Link: link, Summary: s, Time: when})
+		if len(lines) > 1 {
+			extra := strings.Join(lines[1:], "\n")
+			if s != "" {
+				extra += "\n" + s
+			}
+			s = extra
+		}
+		if img == "" {
+			img = firstImage(summary)
+		}
+		tags = cleanTags(tags)
+		out = append(out, newsItem{ID: itemID(link, t), Feed: feedID, Source: src, Title: t, Link: link, Summary: s, Time: when,
+			Tags: tags, Image: safeLink(img), Hot: isHot(t, tags)})
 	}
 	items := append(doc.Channel.Items, doc.Items...)
 	for _, it := range items {
@@ -215,7 +256,26 @@ func parseFeed(body []byte, feedID string) (string, []newsItem, error) {
 		if sum == "" {
 			sum = it.Content
 		}
-		add(it.Title, link, sum, parseFeedTime(d), plainText(it.Source, 60))
+		img := ""
+		for _, m := range append(append(append([]mediaRef{}, it.Media...), it.Enclosures...), it.Thumbs...) {
+			if m.URL != "" && (strings.HasPrefix(m.Type, "image/") || m.Medium == "image" || (m.Type == "" && imageExt.MatchString(m.URL))) {
+				img = m.URL
+				break
+			}
+		}
+		for _, g := range it.Groups {
+			for _, m := range g.Media {
+				if img == "" && m.URL != "" && (strings.HasPrefix(m.Type, "image/") || m.Medium == "image") {
+					img = m.URL
+				}
+			}
+		}
+		if sum == "" {
+			sum = it.Content
+		} else if img == "" && it.Content != "" {
+			img = firstImage(it.Content)
+		}
+		add(it.Title, link, sum, parseFeedTime(d), plainText(it.Source, 60), it.Categories, img)
 	}
 	if len(doc.Entries) > 0 {
 		if title == "" {
@@ -237,13 +297,76 @@ func parseFeed(body []byte, feedID string) (string, []newsItem, error) {
 			if sum == "" {
 				sum = e.Content
 			}
-			add(e.Title, link, sum, parseFeedTime(d), "")
+			var tags []string
+			for _, c := range e.Categories {
+				if c.Label != "" {
+					tags = append(tags, c.Label)
+				} else {
+					tags = append(tags, c.Term)
+				}
+			}
+			img := ""
+			for _, l := range e.Links {
+				if l.Rel == "enclosure" && imageExt.MatchString(l.Href) {
+					img = l.Href
+				}
+			}
+			for _, m := range e.Thumbs {
+				if img == "" {
+					img = m.URL
+				}
+			}
+			add(e.Title, link, sum, parseFeedTime(d), "", tags, img)
 		}
 	}
 	if doc.XMLName.Local != "rss" && doc.XMLName.Local != "feed" && doc.XMLName.Local != "RDF" && len(out) == 0 {
 		return "", nil, errors.New("this address didn't return a news feed")
 	}
 	return title, out, nil
+}
+
+var (
+	imageExt = regexp.MustCompile(`(?i)\.(png|jpe?g|gif|webp)(\?|$)`)
+	imgSrcRe = regexp.MustCompile(`(?is)<img[^>]+src\s*=\s*["']([^"']+)["']`)
+	hotTag   = regexp.MustCompile(`(?i)^(market[ -]?moving|breaking( news)?|urgent|alert|top story|important|red)$`)
+	hotTitle = regexp.MustCompile(`(?i)^\W*(breaking|urgent|flash|alert)\b`)
+)
+
+// firstImage finds the first picture in a feed's HTML description.
+func firstImage(h string) string {
+	m := imgSrcRe.FindStringSubmatch(html.UnescapeString(h))
+	if m == nil {
+		return ""
+	}
+	return strings.TrimSpace(m[1])
+}
+
+func cleanTags(in []string) []string {
+	var out []string
+	seen := map[string]bool{}
+	for _, t := range in {
+		t = plainText(t, 30)
+		k := strings.ToLower(t)
+		if t == "" || seen[k] || strings.HasPrefix(k, "http") {
+			continue
+		}
+		seen[k] = true
+		out = append(out, t)
+		if len(out) == 8 {
+			break
+		}
+	}
+	return out
+}
+
+// isHot: the source itself flagged the story (FinancialJuice's "Market Moving" tag, or a "BREAKING:" headline).
+func isHot(title string, tags []string) bool {
+	for _, t := range tags {
+		if hotTag.MatchString(strings.TrimSpace(t)) {
+			return true
+		}
+	}
+	return hotTitle.MatchString(title)
 }
 
 // ---------- fetching ----------

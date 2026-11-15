@@ -93,3 +93,33 @@ func TestCalendarWidgetCountries(t *testing.T) {
 		t.Fatalf("default countries %v", cfg["countryFilter"])
 	}
 }
+
+func TestParseTagsImagesAndHot(t *testing.T) {
+	body := []byte(`<?xml version="1.0"?><rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/"><channel><title>FJ</title>
+<item><title>Suspected Yen Intervention</title><link>https://www.financialjuice.com/News/1/a.aspx</link>
+<category>JPY</category><category>Market Moving</category><enclosure url="https://www.financialjuice.com/img/chart1.png" type="image/png" length="0"/></item>
+<item><title>FAA issues national ground stop - FAA</title><link>https://www.financialjuice.com/News/2/b.aspx</link>
+<category>US Bonds</category><category>US Indexes</category><category>USD</category><category>US Indexes</category>
+<description>&lt;p&gt;See chart &lt;img src="https://cdn.example.com/c.jpg"&gt;&lt;/p&gt;</description></item>
+<item><title>MOC Imbalance
+S&amp;P 500: +2404 mln
+Nasdaq 100: +1786 mln</title><link>https://www.financialjuice.com/News/3/c.aspx</link><media:content url="https://e.com/m.webp" medium="image"/></item>
+<item><title>BREAKING: Fed cuts rates</title><link>https://e.com/4</link><enclosure url="javascript:alert(1)" type="image/png"/></item>
+</channel></rss>`)
+	_, items, err := parseFeed(body, "fj")
+	if err != nil || len(items) != 4 {
+		t.Fatalf("items %d err %v", len(items), err)
+	}
+	if !items[0].Hot || items[0].Image != "https://www.financialjuice.com/img/chart1.png" || strings.Join(items[0].Tags, ",") != "JPY,Market Moving" {
+		t.Fatalf("market moving item: %+v", items[0])
+	}
+	if items[1].Hot || items[1].Image != "https://cdn.example.com/c.jpg" || len(items[1].Tags) != 3 {
+		t.Fatalf("tags/description image: %+v", items[1])
+	}
+	if items[2].Title != "MOC Imbalance" || items[2].Summary != "S&P 500: +2404 mln\nNasdaq 100: +1786 mln" || items[2].Image != "https://e.com/m.webp" {
+		t.Fatalf("multi-line title: %q / %q / %q", items[2].Title, items[2].Summary, items[2].Image)
+	}
+	if !items[3].Hot || items[3].Image != "" {
+		t.Fatalf("breaking headline / unsafe image: %+v", items[3])
+	}
+}
